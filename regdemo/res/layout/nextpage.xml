@@ -1,15 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView android:id="@+id/scrollView1"
+android:layout_width="fill_parent" android:layout_height="fill_parent"
+xmlns:android="http://schemas.android.com/apk/res/android">
+
 <RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    >
-    
-  
+    android:paddingTop="@dimen/activity_vertical_margin" >
 
     <TextView
         android:id="@+id/textView1"
@@ -18,63 +18,50 @@
         android:text="@string/title"
         android:textSize="20sp" />
 
-  
+    <CheckBox
+        android:id="@+id/umeoa"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView1"
+        android:layout_marginTop="20dp"
+        android:text="@string/kuolewa" />
+       
+    <LinearLayout
+         android:id="@+id/chumbakuoa"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/umeoa"
+        android:orientation="vertical" >
+    </LinearLayout>
 
     <EditText
-        android:id="@+id/mkopokiasi"
+        android:id="@+id/idadiwatoto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_below="@id/textView1"
+        android:layout_below="@+id/chumbakuoa"
         android:ems="10"
-        android:hint="@string/mkopokiasi"
-        android:inputType="numberDecimal" >
-           <requestFocus />
-    </EditText>
+        android:hint="@string/mtotongapi"
+        android:inputType="number" />
 
-   <TextView
-        android:id="@+id/taremkopo"
+      <LinearLayout
+         android:id="@+id/chumbawatoto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/mkopokiasi"
-        android:text="@string/tarehemkopo" 
-        android:ems="10" />
-    <DatePicker
-        android:id="@+id/tarehemkopo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/taremkopo" />
+        android:layout_below="@+id/idadiwatoto"
+        android:orientation="vertical" >
+    </LinearLayout>
 
     <Button
-        android:id="@+id/pigapicha"
+        android:id="@+id/inayofuata"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tarehemkopo"
-        android:text="@string/bonyeza" />
-
-    <EditText
-        android:id="@+id/nenosiri"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/pigapicha"
-        android:ems="10"
-        android:hint="@string/nenosiri"
-        android:inputType="textPassword" />
-
-    <Button
-        android:id="@+id/tumadata"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/nenosiri"
-        android:text="@string/tumataarifa" />
-
-    <ImageView
-        android:id="@+id/image"
-        android:layout_width="wrap_content"
-        android:layout_height="48dp"
-        android:layout_below="@+id/tarehemkopo"
+        android:layout_below="@+id/chumbawatoto"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/ic_launcher" />
+        android:layout_marginTop="22dp"
+        android:text="@string/inayofuata" />
+
+
 
 </RelativeLayout>
-
+</ScrollView>

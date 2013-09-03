@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView android:id="@+id/scrollView1"
+android:layout_width="fill_parent" android:layout_height="fill_parent"
+xmlns:android="http://schemas.android.com/apk/res/android">
+<RelativeLayout android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="18dp"
+        android:text="@string/title"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+ 
+
+    <Button
+        android:id="@+id/pichamteja"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView1"
+        android:onClick="pichaMteja"
+        android:layout_marginTop="24dp"
+        android:text="@string/picha" />
+
+   <ImageView
+       android:id="@+id/mtejaview"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_below="@+id/pichamteja"
+       android:src="@drawable/ic_launcher" />
+
+   <Button
+       android:id="@+id/tumadata"
+       style="?android:attr/buttonStyleSmall"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_alignParentBottom="true"
+       android:layout_marginLeft="16dp"
+       android:layout_below="@+id/mtejaview"
+       android:text="@string/inayofuata" />
+
+</RelativeLayout>
+</ScrollView>

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView android:id="@+id/scrollView1"
+android:layout_width="fill_parent" android:layout_height="fill_parent"
+xmlns:android="http://schemas.android.com/apk/res/android">
+<RelativeLayout android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
+        android:text="@string/title"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+    
+     <EditText
+        android:id="@+id/biashara"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignRight="@+id/textView1"
+        android:layout_below="@+id/textView1"
+        android:layout_marginTop="22dp"
+        android:ems="10"
+        android:hint="@string/biashara" />
+
+   <EditText
+       android:id="@+id/kikundi"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:layout_below="@+id/biashara"
+       android:layout_marginTop="20dp"
+       android:ems="10"
+       android:hint="@string/kikundi" >
+
+        <requestFocus />
+    </EditText> 
+     <Spinner
+        android:id="@+id/huduma"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/kikundi"
+       />
+
+    <EditText
+        android:id="@+id/banki"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/huduma"
+        android:ems="10"
+        android:hint="@string/banki" />
+
+    <EditText
+        android:id="@+id/ombikiwango"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/banki"
+        android:ems="10"
+        android:hint="@string/mkopokiasi"
+        android:inputType="number" />
+
+    <EditText
+        android:id="@+id/kuanziakiwango"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ombikiwango"
+        android:ems="10"
+        android:hint="@string/kiwangokuanzia"
+        android:inputType="number" />
+
+    <EditText
+        android:id="@+id/maliposiku"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/kuanziakiwango"
+        android:ems="10"
+        android:hint="@string/malipokwasiku"
+        android:inputType="number" />
+    
+     <Spinner
+        android:id="@+id/mudamalipo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/maliposiku"
+       />
+
+    <Button
+        android:id="@+id/inayofuata"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/mudamalipo"
+        android:layout_marginLeft="75dp"
+        android:layout_marginTop="36dp"
+        android:text="@string/inayofuata" />
+
+   
+
+</RelativeLayout>
+</ScrollView>

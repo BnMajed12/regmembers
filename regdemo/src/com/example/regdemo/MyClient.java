@@ -30,10 +30,22 @@ public class MyClient {
 	private String result="failed";
 	private String res="";
 	private Bitmap bitmap;
+	private   ByteArrayBody bab;
 public MyClient(String url,String imageUrl){
 	params = new ArrayList<NameValuePair>();
 	this.url=url;
 	this.imageUrl=imageUrl;
+}
+
+public void addImages(String imageUrl){
+	bitmap=BitmapFactory.decodeFile(imageUrl);
+	 ByteArrayOutputStream bos = new ByteArrayOutputStream();
+    bitmap.compress(CompressFormat.JPEG, 75, bos);
+      byte[] data = bos.toByteArray();
+     bab = new ByteArrayBody(data,"profile.jpg");
+}
+private   ByteArrayBody getImage(){
+return this.bab;
 }
 public String sendMultiformData(){
 	HttpPost postRequest=new HttpPost(url);
@@ -43,12 +55,7 @@ public String sendMultiformData(){
         {
 			reqEntity.addPart(h.getName(), new StringBody(h.getValue()));
         }
-		bitmap=BitmapFactory.decodeFile(imageUrl);
-		 ByteArrayOutputStream bos = new ByteArrayOutputStream();
-	     bitmap.compress(CompressFormat.JPEG, 75, bos);
-	        byte[] data = bos.toByteArray();
-	        ByteArrayBody bab = new ByteArrayBody(data,"profile.jpg");
-	        reqEntity.addPart("picha", bab);
+	       reqEntity.addPart("picha", getImage());
 	} catch (UnsupportedEncodingException e) {
     res=e.toString();
 	}

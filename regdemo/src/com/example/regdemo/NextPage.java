@@ -1,90 +1,247 @@
 package com.example.regdemo;
 
-import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.DatePicker;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 public class NextPage extends Activity {
 	private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
 	private Uri fileUri;
+	private LayoutInflater inflater;
+	private String urls;
+	private String results="";
+	private HashMap<String,String> myData;
+	private ArrayList<HashMap<String,String>>  logData=new ArrayList<HashMap<String,String>>();
 	public static final int MEDIA_TYPE_IMAGE = 1;
 	public static final int MEDIA_TYPE_VIDEO = 2;
 	private String[] frompageone;
 	private Bitmap bitmap;
-	private  Button pigaPicha;
+	private  Button sendData;
 	private ImageView image;
+	private CheckBox umeoa;
+	private EditText idadiWatoto;
+	private int myWidth;
+	int _intMyLineCount;
+	LinearLayout LLEnterText,UmeoaEnterText;
+    private List<EditText> editListUmeoa = new ArrayList<EditText>();
+    private List<EditText> editListWatoto = new ArrayList<EditText>();
+    private List<LinearLayout> linearlayoutList=new ArrayList<LinearLayout>();
 	String url="";
 	private static final int CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE = 200;
 	 @Override
 	    protected void onCreate(Bundle savedInstanceState) {
 	        super.onCreate(savedInstanceState);
 	        setContentView(R.layout.nextpage);
+	        inflater=(LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			 urls=this.getResources().getString(R.string.apiURL);
 	        Intent pageone=getIntent();
 	    frompageone= pageone.getStringArrayExtra("pageone");
-	        pigaPicha=(Button)findViewById(R.id.pigapicha);
-	        image=(ImageView)findViewById(R.id.image);
-	        Button tumaData=(Button)findViewById(R.id.tumadata);
-	         url=this.getResources().getString(R.string.apiURL);
-	        //capture image action
-	        pigaPicha.setOnClickListener(new OnClickListener(){
-				@Override
-				public void onClick(View v) {
-					// create Intent to take a picture and return control to the calling application
-				    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-				    fileUri = CameraProcess.getOutputMediaFileUri(MEDIA_TYPE_IMAGE);
-				    intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri); // set the image file name
+	    LLEnterText=(LinearLayout) findViewById(R.id.chumbawatoto);
+	    UmeoaEnterText=(LinearLayout)findViewById(R.id.chumbakuoa);
+	    idadiWatoto=(EditText)findViewById(R.id.idadiwatoto);
+	    umeoa=(CheckBox)findViewById(R.id.umeoa);
+	    sendData=(Button)findViewById(R.id.inayofuata);
+	    //tunatuma data hapa
+	    sendData.setOnClickListener(new OnClickListener(){
 
-				    // start the image capture Intent
-				    startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+			@Override
+			public void onClick(View v) {
+				dataToSend();
+			}
+	    	
+	    });
+	    
+	    //Tumeoweka check action ili kuweka field ya jina la mke au mume.
+	  umeoa.setOnCheckedChangeListener(new OnCheckedChangeListener(){
+		@Override
+		public void onCheckedChanged(CompoundButton arg0, boolean arg1) {
+			Boolean kaoa=umeoa.isChecked();
+			myWidth=idadiWatoto.getWidth();
+			Log.e("Umeoa checked","NImeoa");
+			if(kaoa){
+				String hint="Jina La Mume/Mke";
+				 UmeoaEnterText.addView(linearlayout(80,hint,myWidth,editListUmeoa));	
+			}else{
+				 UmeoaEnterText.removeViewAt(0);	
+			}
+			
+		}
+	  });
+	  
+
+	    //tunaongeza field kulingana na idadi ya watoto.
+	    idadiWatoto.addTextChangedListener(new TextWatcher(){
+			@Override
+			public void afterTextChanged(Editable arg0) {
+				String idadi=idadiWatoto.getText().toString().trim();
+				myWidth=idadiWatoto.getWidth();
+				 int childs=LLEnterText.getChildCount();
+		    	 if(childs>0){
+		    		LLEnterText.removeAllViews();
+		    		for(int i=0; i<editListWatoto.size(); i++){
+		    		editListWatoto.remove(i);
+		    		}
+		    	 }
+				if(!idadi.equals("")){
+					  int idadiW=Integer.parseInt(idadi);
+					    if(idadiW>0){
+					    	for(int i=1; i<=idadiW; i++){
+					    		String hint="Jina Mtoto "+i;
+					    		Log.e("Addview","My editText");
+					    		   LLEnterText.addView(linearlayout(_intMyLineCount,hint,myWidth,editListWatoto));
+					    		   _intMyLineCount=i;
+					    	}
+					    }
+
+				}else{
+					  LLEnterText.removeAllViews();	
+				    	 if(childs>0){
+				    		LLEnterText.removeAllViews();
+				    		for(int i=0; i<editListWatoto.size(); i++){
+				    		editListWatoto.remove(i);
+				    		}
+				    	 }
 				}
-	        	
-	        });
-	        
-	        //send data action
-	        tumaData.setOnClickListener(new OnClickListener(){
-				@Override
-				public void onClick(View v) {
-					
-					EditText kiasiMkopo=(EditText)findViewById(R.id.mkopokiasi);
-					DatePicker tareheMkopo=(DatePicker)findViewById(R.id.tarehemkopo);
-					EditText nenosiri=(EditText)findViewById(R.id.nenosiri);
-					int month=tareheMkopo.getMonth()+1;
-					int year=tareheMkopo.getYear();
-					int day=tareheMkopo.getDayOfMonth();
-					String tarehe=""+year+"-"+month+"-"+day;
-					MyClient clients=new MyClient(url,fileUri.getEncodedPath());
-					clients.addParam("jina", frompageone[0]);
-					clients.addParam("mkoa", frompageone[1]);
-					clients.addParam("wilaya", frompageone[2]);
-					clients.addParam("kata", frompageone[3]);
-					clients.addParam("simu", frompageone[4]);
-					clients.addParam("kikundi", frompageone[5]);
-					clients.addParam("biashara",frompageone[6]);
-					clients.addParam("mkopo", kiasiMkopo.getText().toString());
-					clients.addParam("tarehemkopo",tarehe);
-					clients.addParam("nenosiri", nenosiri.getText().toString());
-					String result=clients.sendMultiformData();
-					Toast.makeText(NextPage.this, result, Toast.LENGTH_LONG).show();
-					// create Intent to take a picture and return control to the calling application
-	           }        
-	        	
-	        });
+			}
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {}
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
+				LLEnterText.removeAllViews();	
+				int childs=LLEnterText.getChildCount();
+		    	 if(childs>0){
+		    		LLEnterText.removeAllViews();
+		    		for(int i=0; i<editListWatoto.size(); i++){
+		    		editListWatoto.remove(i);
+		    		}
+		    	 }
+				
+			}
+	    	   
+	       });
+	   
 	    }
-
+     private void resetView(){
+    	 idadiWatoto.setText("");
+    	 umeoa.setChecked(false);
+    	 int childc= UmeoaEnterText.getChildCount();
+    	 if(childc>0){
+    		 UmeoaEnterText.removeAllViews(); 
+    		 for(int i=0; i<editListUmeoa.size(); i++){
+    	    		editListUmeoa.remove(i);
+    	    		}
+    	 }
+    	 int childs=LLEnterText.getChildCount();
+    	 if(childs>0){
+    		LLEnterText.removeAllViews();
+    		for(int i=0; i<editListWatoto.size(); i++){
+    		editListWatoto.remove(i);
+    		}
+    	 }
+     }
+	 private void dataToSend(){
+		String watoto=idadiWatoto.getText().toString();
+		String myChild="";
+		String familia="{\"userfamily\":[";
+		String kuoa="";
+		Boolean umeoaz=umeoa.isChecked();
+		if(umeoaz){
+			int childc= UmeoaEnterText.getChildCount();
+			if(childc>0){
+				
+		 //EditText myText=(EditText)UmeoaEnterText.getChildAt(0);
+		 for (EditText myText : editListUmeoa) {
+		kuoa="{\"mwanajina\":\""+myText.getText().toString()+"\",\"aina\":\"mke\",\"id\":\""+frompageone[0]+"\",\"mratibu\":\"2\"}";
+		 }
+		 }
+			
+			if(Integer.parseInt(watoto)>=1){
+				int childs=LLEnterText.getChildCount();
+				if(childs>0){
+					int i=1;
+					
+					 for (EditText editText : editListWatoto) {
+						 if(i>=childs){
+                         myChild+="{\"mwanajina\":\""+editText.getText().toString()+"\",\"aina\":\"mtoto\",\"id\":\""+frompageone[0]+"\",\"mratibu\":\"2\"}";
+						 }else{
+					 myChild+="{\"mwanajina\":\""+editText.getText().toString()+"\",\"aina\":\"mtoto\",\"id\":\""+frompageone[0]+"\",\"mratibu\":\"2\"},";	 
+						 }
+                         i++;
+                     }
+				}
+			}
+			if(myChild.equals("") && kuoa.equals("")){
+				//all are empty
+			}else if(myChild.equals("") && (!kuoa.equals(""))){
+				//myChild is empty
+			  familia+=kuoa+"]}";	
+			}else if(kuoa.equals("") && (!myChild.equals(""))){
+				//kuoa is empty
+				familia+=myChild+"]}";
+			}else{
+			//all have something.
+			familia+=kuoa+","+myChild+"]}";	
+			}
+			Log.e("Famili",familia);
+			if(!familia.equals("")){
+				ClientWebService register=new ClientWebService(urls,NextPage.this,inflater,"data",false);
+				  register.AddParam("data", familia);
+			       register.AddParam("action", "register2");
+			       
+					 String[] mapkey={"refId"};
+				     register.setMapKey(mapkey);
+					 register.execute("post");
+					 try {
+						 resetView();
+						 results=register.get();
+						 String value=String.valueOf(results);
+						 if(!value.trim().equals("false")){
+							
+							
+							if(results!=null){
+								logData=register.getData();
+					           if(logData!=null && logData.size()>0){
+			              	  
+			    					myData=logData.get(0);
+			    					
+			    					Intent intent=new Intent(NextPage.this,Biashara.class);
+			    			        intent.putExtra("pageone", frompageone);
+			    			    	   startActivity(intent);
+			    				
+			    				}
+							}
+						 }
+					 }catch (InterruptedException e) {} catch (ExecutionException e) {}
+			}
+				
+		}
+	 }
 
 	    @Override
 	    public boolean onCreateOptionsMenu(Menu menu) {
@@ -122,4 +279,27 @@ public class NextPage extends Activity {
 	            }
 	        }
 	    }
+	  
+	    
+	    private EditText editText(int _intID,String hitText,int width,List<EditText> editList) {
+            EditText editText = new EditText(this);
+            editText.setId(_intID);
+            editText.setHint(hitText);
+            editText.setWidth(width);
+            editList.add(editText);
+            return editText;
+        }
+	    
+	    private LinearLayout linearlayout(int _intID,String editTextHint,int width,List<EditText> editList)
+	    {
+	        LinearLayout LLMain=new LinearLayout(this);
+	        LLMain.setId(_intID);
+	       // LLMain.addView(textView(_intID));
+	        LLMain.addView(editText(_intID,editTextHint,width,editList));
+	        LLMain.setOrientation(LinearLayout.HORIZONTAL);
+	        linearlayoutList.add(LLMain);
+	        return LLMain;
+
+	    }
+	    
 }
