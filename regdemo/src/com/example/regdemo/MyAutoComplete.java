@@ -36,10 +36,12 @@ public class MyAutoComplete extends ArrayAdapter<String> implements Filterable{
 	public ArrayList<String> autoComplete(String input){
 		ArrayList<String> resultList = null;
 		ClientWebService test=new ClientWebService(urls);
-		String data="{\""+jsonArray+"\":[{\"type\":\""+jsonArray+"\",\"search\":\""+input+"\",\"value\":\""+infos+"\"}]}";
+		//String data="{\""+jsonArray+"\":[{\"type\":\""+jsonArray+"\",\"search\":\""+input+"\",\"value\":\""+infos+"\"}]}";
 		test.AddParam("action","autocomp");
 		test.AddParam("type",jsonArray);
-		 test.AddParam("data", data);
+		test.AddParam("search", input);
+		test.AddParam("value", infos);
+		 test.AddParam("data", "");
 		 test.execute("get");
 		 try {
   			 results=test.get();

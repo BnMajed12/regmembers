@@ -35,8 +35,8 @@ import android.widget.Toast;
 public class MainActivity extends Activity implements OnItemClickListener, OnItemSelectedListener, OnClickListener {
 	private LayoutInflater inflater;
 	private String urls;
-	private String results="";
-	
+	private String results=null;
+	private DatabaseOperation ops=null;
 	private ArrayList<HashMap<String,String>>  logData=new ArrayList<HashMap<String,String>>();
 	private HashMap<String,String> myData;
 	private EditText jina,tareheKuzaliwa,simu,nambaKitambulisho,ainaKitambulisho;
@@ -45,8 +45,10 @@ public class MainActivity extends Activity implements OnItemClickListener, OnIte
 	private RadioButton mke,mme;
 	private Button  sendButton;
 	private String huumkoa,hiiwilaya;
+	private DatabaseOperation forSpin=null;
 	private Spinner spinMkoa,spinWilaya,spinKata;
 	private ArrayAdapter<String> mkoaAdapt,wilayaAdapt,kataAdapt;
+	private ArrayList<String> mkoaList,kataList,wilayaList;
 	private String ids;
 	//private ProgressBar barprogress=null;
     @Override
@@ -56,6 +58,9 @@ public class MainActivity extends Activity implements OnItemClickListener, OnIte
        // Button inayofuata=(Button)findViewById(R.id.inayofuata);
         inflater=(LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		 urls=this.getResources().getString(R.string.apiURL);
+		 mkoaList=new ArrayList<String>();
+		 wilayaList=new ArrayList<String>();
+		 kataList=new ArrayList<String>();
 		 //barprogress=(ProgressBar)findViewById(R.id.inaload);
 		 //MyAdapter(this,int spinner, int textViewResourceId,String[] objects,LayoutInflater inflates,int viewlayoutid)
 		 spinMkoa=(Spinner)findViewById(R.id.mkoa);
@@ -64,63 +69,26 @@ public class MainActivity extends Activity implements OnItemClickListener, OnIte
 		 spinMkoa.setOnItemSelectedListener(this);
 		 spinWilaya.setOnItemSelectedListener(this);
 		 spinKata.setOnItemSelectedListener(this);
+		 forSpin=new DatabaseOperation(MainActivity.this);
+		 ArrayList<String> mkoaSpin=forSpin.getMkoa();
+		 forSpin.close();
+		 if(mkoaSpin!=null && mkoaSpin.size()>0){
+			mkoaList=mkoaSpin;
+		 }else{
+			 mkoaList=getSpinnerData("mikoa","","");
+			 for(String mydata: mkoaList){
+    			 ops=new DatabaseOperation(MainActivity.this);
+    			ops.insertMkoa(mydata);
+    			ops.close();
+    		}
+		 }
+		 
 		 mkoaAdapt=new ArrayAdapter<String>(this,
-	    			android.R.layout.simple_spinner_item, getSpinnerData("mikoa","",""));
+	    			android.R.layout.simple_spinner_item,mkoaList );
 		 addSpinnerData(spinMkoa,mkoaAdapt);
 		createItems();
 		sendButton.setOnClickListener(this);
-		//mkoa.setAdapter(new  MyAutoComplete(this,R.layout.autocomplete_list,urls,"","mikoa","mikoa"));
-		//mkoa.setOnItemClickListener(this);
-		//wilaya.setOnItemClickListener(this);
-		//kata.setOnItemClickListener(this);
-		//kata.setAdapter(new  MyAutoComplete(this,R.layout.autocomplete_list,urls,wilaya.getText().toString(),"mikoa","mikoa"));
-	     
-		// barprogress.setVisibility(View.GONE);
-		 ClientWebService test=new ClientWebService(urls,MainActivity.this,inflater,"login",false);
-		 test.AddParam("user", "all");
-		 String[] mapkey={"name","status"};
-  	     test.setMapKey(mapkey);
-		 test.execute("get");
-		 try {
-  			 results=test.get();
-  			 String value=String.valueOf(results);
-  			 if(!value.trim().equals("false")){
-  				
-  				
-  				if(results!=null){
-  					logData=test.getData();
-  		           if(logData!=null && logData.size()>0){
-                	  
-      					myData=logData.get(0);
-      					String userid=myData.get("name");
-      					ids=userid;
-      					String status=myData.get("status");
-      					Log.e("Hash","online :"+userid+status);
-      				}
-  				}
-  			 }
-		 }catch (InterruptedException e) {} catch (ExecutionException e) {}
-  			
-        	/*
-        inayofuata.setOnClickListener(new OnClickListener(){
-			@Override
-			public void onClick(View v) {
-				
-				
-				EditText mkoa=(EditText)findViewById(R.id.mkoa);
-				EditText wilaya=(EditText)findViewById(R.id.wilaya);
-				EditText kata=(EditText)findViewById(R.id.kata);
-				EditText simu=(EditText)findViewById(R.id.simu);
-				EditText kikundi=(EditText)findViewById(R.id.kikundi);
-				EditText biashara=(EditText)findViewById(R.id.biashara);
-				String[] value={jina.getText().toString(),mkoa.getText().toString(),wilaya.getText().toString(),kata.getText().toString(),simu.getText().toString(),kikundi.getText().toString(),biashara.getText().toString()};
-				Intent intent=new Intent(MainActivity.this,NextPage.class);
-		        intent.putExtra("pageone", value);
-		    	   startActivity(intent);
-		    	   
-			}
-        	
-        });*/
+	
     }
    
     @Override
@@ -154,20 +122,37 @@ public class MainActivity extends Activity implements OnItemClickListener, OnIte
         if(mmez){
         jinsiaz="mwanaume";
         }
+        /*
         String mydata="{\"userbasic\":[{\"jina\":\""+jinaz+"\",\"tarehekuzaliwa\":\""+jinsiaz+"\",\"jinsia\":\""+jinsiaz+"\",\"simu\":\""+simuz+"\",";
                mydata+="\"nambakita\":\""+nambaKita+"\",\"ainakita\":\""+ainaKita+"\",\"mkoa\":\""+mkoaz+"\",\"wilaya\":\""+wilayaz+"\",";
                mydata+="\"kata\":\""+kataz+"\",\"mratibu\":\"2\",\"id\":\""+ids+"\"}]}";
+               */
            
        ClientWebService register=new ClientWebService(urls,MainActivity.this,inflater,"data",false);
-       register.AddParam("data", mydata);
+       register.AddParam("data", "");
        register.AddParam("action", "register");
-       
-		 String[] mapkey={"refId"};
-	     register.setMapKey(mapkey);
-		 register.execute("post");
+       register.AddParam("jina",jinaz);
+       register.AddParam("tarehekuzaliwa", jinsiaz);
+       register.AddParam("jinsia", jinsiaz);
+       register.AddParam("simu", simuz);
+       register.AddParam("mkoa", mkoaz);
+       register.AddParam("wilaya", wilayaz);
+       register.AddParam("nambakita",nambaKita);
+       register.AddParam("ainakita", ainaKita);
+       register.AddParam("kata", kataz);
+       register.AddParam("mratibu", "2");
+       register.AddParam("id", ids);
+       //register.isMultForm(true);
+	   String[] mapkey={"refId"};
+	   register.setMapKey(mapkey);
+	   register.execute("post");
 		 try {
 			 resetFields();
-			 results=register.get();
+			 if(register.getResponseCode()!=503 && register.getResponseCode()!=404 && register.getResponseCode()!=408 ){
+			results=register.get();
+			 }else{
+            //display some errors	 
+			 }
 			 String value=String.valueOf(results);
 			 if(!value.trim().equals("false")){
 				
@@ -195,22 +180,6 @@ public class MainActivity extends Activity implements OnItemClickListener, OnIte
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) { 
     	String str = (String) adapterView.getItemAtPosition(position);
   
-    	int mkoaz=R.id.automkoa;
-    	int wilayaz=R.id.autowilaya;
-    	int kataz=R.id.autokata;
-    	int myview=view.getId();
-    	
-    	if( myview==mkoaz){
-    		wilaya.setAdapter(new  MyAutoComplete(this,R.layout.autocomplete_wilaya,urls,str,"wilaya","wilaya"));
-    		mkoa.setText(str);
-    	Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
-           
-    	}else if(myview==wilayaz){
-    		wilaya.setText(str);
-    		kata.setAdapter(new  MyAutoComplete(this,R.layout.autocomplete_kata,urls,str,"kata","kata"));
-    	}else if(myview==kataz){
-    		kata.setText(str);
-    	}
     	
    // Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
     }
@@ -241,14 +210,22 @@ public class MainActivity extends Activity implements OnItemClickListener, OnIte
     
     public ArrayList<String> getSpinnerData(String jsonArray,String input,String infos){
     	ArrayList<String> resultList = null;
+    	
 		ClientWebService test=new ClientWebService(urls);
-		String data="{\""+jsonArray+"\":[{\"type\":\""+jsonArray+"\",\"search\":\""+input+"\",\"value\":\""+infos+"\"}]}";
+		//String data="{\""+jsonArray+"\":[{\"type\":\""+jsonArray+"\",\"search\":\""+input+"\",\"value\":\""+infos+"\"}]}";
 		test.AddParam("action","autocomp");
 		test.AddParam("type",jsonArray);
-		 test.AddParam("data", data);
-		 test.execute("get");
+		 test.AddParam("search",input);
+		 test.AddParam("value", infos);
+		 test.isMultForm(true);
+		 test.execute("post");
 		 try {
+              if(test.getResponseCode()!=503 && test.getResponseCode()!=404 && test.getResponseCode()!=408  ){
   			 results=test.get();
+              }else{
+            	  //some errors
+            	  results="{\""+jsonArray+"\":[{\""+jsonArray+"\":\"none\"}]}";
+              }
   			 String value=String.valueOf(results);
   			 if(!value.trim().equals("false")){
   				Log.e("Filter",infos);
@@ -280,13 +257,49 @@ public class MainActivity extends Activity implements OnItemClickListener, OnIte
 		int wilayaId=R.id.wilaya;
 		int kataId=R.id.kata;
 	   int id=adapterView.getId();
+	   /*
+	    * 
+	    * for(String mydata: mkoaList){
+    			 ops=new DatabaseOperation(MainActivity.this);
+    			ops.insertHuduma(mydata);
+    			ops.close();
+    		}
+	    */
 		if(id==mkoaId){
+			forSpin=new DatabaseOperation(MainActivity.this);
+	   		 ArrayList<String> wilayaSpin=forSpin.getWilaya(str);
+	   		forSpin.close();
+	   		 if(wilayaSpin!=null && wilayaSpin.size()>0){
+	   			wilayaList=wilayaSpin;
+	   		 }else{
+	   			 wilayaList=getSpinnerData("wilaya","",str);
+	   			for(String mydata: wilayaList){
+	    			 ops=new DatabaseOperation(MainActivity.this);
+	    			ops.insertWilaya(mydata, str);
+	    			ops.close();
+	    		}
+	   		 }
+	   		 
 			wilayaAdapt=new ArrayAdapter<String>(MainActivity.this,
-	    			android.R.layout.simple_spinner_item, getSpinnerData("wilaya","",str));
+	    			android.R.layout.simple_spinner_item, wilayaList);
 			 addSpinnerData(spinWilaya,wilayaAdapt);	
 		}else if(id==wilayaId){
+			forSpin=new DatabaseOperation(MainActivity.this);
+	   		 ArrayList<String> wilayaSpin=forSpin.getKata(str);
+	   		forSpin.close();
+	   		 if(wilayaSpin!=null && wilayaSpin.size()>0){
+	   			wilayaList=wilayaSpin;
+	   		 }else{
+	   			 kataList=getSpinnerData("kata","",str);
+	   			for(String mydata: kataList){
+	    			 ops=new DatabaseOperation(MainActivity.this);
+	    			ops.insertKata(mydata,str);
+	    			ops.close();
+	    		}
+	   		 }
+	   		 
 			kataAdapt=new ArrayAdapter<String>(MainActivity.this,
-	    			android.R.layout.simple_spinner_item, getSpinnerData("kata","",str));
+	    			android.R.layout.simple_spinner_item, kataList);
 			addSpinnerData(spinKata,kataAdapt);
 		}else if(id==kataId){
 			

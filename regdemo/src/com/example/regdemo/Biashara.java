@@ -110,21 +110,33 @@ public class Biashara extends Activity implements OnItemSelectedListener {
 		if(biasharaz.equals("") && kiwangoz.equals("") && kianzioz.equals("") && malipo.equals("")){
 		//some fields are empty.	
 		}else{
-			String familia="{\"userbusiness\":[{\"biashara\":\""+biasharaz+"\",\"kikundi\":\""+kikundiz+"\",\"banki\":\""+bankiz+"\",";
+			/*String familia="{\"userbusiness\":[{\"biashara\":\""+biasharaz+"\",\"kikundi\":\""+kikundiz+"\",\"banki\":\""+bankiz+"\",";
 			       familia+="\"kiwango\":\""+kiwangoz+"\",\"kianzio\":\""+kianzioz+"\",\"maliposiku\":\""+malipo+"\",";
 			       familia+="\"huduma\":\""+huduma+"\",\"mudamalipo\":\""+mudaz+"\",\"id\":\""+frompageone[0]+"\",\"mratibu\":\"2\"}]}";
-	             Log.e("famili",familia);
-			   	if(!familia.equals("")){
+	           //  Log.e("famili",familia);*/
+			  
 					ClientWebService register=new ClientWebService(urls,Biashara.this,inflater,"data",false);
-					  register.AddParam("data", familia);
+					  register.AddParam("data", "");
 				       register.AddParam("action", "register3");
-				       
+				       register.AddParam("biashara", biasharaz);
+				       register.AddParam("kikundi", kikundiz);
+				       register.AddParam("banki", bankiz);
+				       register.AddParam("kiwango", kiwangoz);
+				       register.AddParam("kianzio", kianzioz);
+				       register.AddParam("maliposiku", malipo);
+				       register.AddParam("huduma", huduma);
+				       register.AddParam("mudamalipo",mudaz);
+				       register.AddParam("id", frompageone[0]);
+				       register.isMultForm(true);
+				       register.AddParam("mratibu", "2");
 						 String[] mapkey={"refId"};
 					     register.setMapKey(mapkey);
 						 register.execute("post");
 						 try {
 							 resetView();
+							 if(register.getResponseCode()!=503 && register.getResponseCode()!=404 && register.getResponseCode()!=408 ){
 							 results=register.get();
+							 }
 							 String value=String.valueOf(results);
 							 if(!value.trim().equals("false")){
 								
@@ -143,7 +155,7 @@ public class Biashara extends Activity implements OnItemSelectedListener {
 								}
 							 }
 						 }catch (InterruptedException e) {} catch (ExecutionException e) {}
-				}
+				
 		}
 	
 		

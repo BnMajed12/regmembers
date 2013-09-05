@@ -10,6 +10,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Vector;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -31,7 +32,6 @@ import org.apache.http.protocol.HTTP;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -39,6 +39,8 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Bitmap.CompressFormat;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -69,7 +71,7 @@ public class ClientWebService  extends AsyncTask<String,Integer,String> {
 	   private int[] textViewid;
 	   private int addtocart=0;
 		 private int addtoPlaylist=0;
-	   private ArrayList< HashMap<String, String>> data,JsonData;
+	   private ArrayList< HashMap<String, String>> data;
 	   private LayoutInflater inflates;
 	   private int viewlayoutid;
 	  private  int textViewResourceId;
@@ -84,7 +86,7 @@ public class ClientWebService  extends AsyncTask<String,Integer,String> {
 	private int imageViewId=0;
 	private int imageiconid=0;
 	private Boolean isListData=true;
-	private Boolean hasAdapter=false;
+	//private Boolean hasAdapter=false;
 	private List<ByteArrayBody> mybobs=new ArrayList<ByteArrayBody>();
 	int i=1;
 	    /**
@@ -119,12 +121,33 @@ public class ClientWebService  extends AsyncTask<String,Integer,String> {
 	        headers = new ArrayList<NameValuePair>();	
 	    }
 	    
-  public ClientWebService(String url){
+	public ClientWebService(String url,Context context,LayoutInflater inflates){
+		this.url = url;
+        this.context=context;
+      	this.inflates=inflates;	
+	}
+	    
+     public ClientWebService(String url){
 		this.url = url;	
 		params = new ArrayList<NameValuePair>();
         headers = new ArrayList<NameValuePair>();
 	    }
   
+public Boolean hasConnection(){
+	Boolean isconn=false;
+	@SuppressWarnings("static-access")
+	ConnectivityManager connMgr = (ConnectivityManager) 
+	        context.getSystemService(context.CONNECTIVITY_SERVICE);
+	    NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+	    if (networkInfo != null && networkInfo.isConnected()) {
+	        // fetch data
+	    	isconn=true;
+	    } else {
+	        // display error
+	    	isconn=false;
+	    }
+	    return isconn;
+}
 	    public void isMultForm(Boolean isMultForm){
 	    	this.isMultForm=isMultForm;
 	    }
@@ -346,6 +369,12 @@ public class ClientWebService  extends AsyncTask<String,Integer,String> {
 	        executeRequest(request, url);
 	    break;
 	    }
+			case DELETE:
+				break;
+			case PUT:
+				break;
+			default:
+				break;
 	        }
 	    }
 	    /**
@@ -413,10 +442,48 @@ public class ClientWebService  extends AsyncTask<String,Integer,String> {
 	    		cancel(true);
 	    		client.getConnectionManager().shutdown();
 	    		Log.e("ClientProtocolException", e.toString());
+	    		AlertDialog.Builder builder=new AlertDialog.Builder(context);
+	    		builder.setMessage("ClientProtocolException, "+e.toString());
+	    		builder.setCancelable(false);
+	    		builder.setPositiveButton("OK",new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.cancel();
+					}
+				});
+	    		builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.cancel();
+					}
+				});
+	    		AlertDialog alert=builder.create();
+	    		alert.show();
 	    	} catch (IOException e) {
 	    		this.connStatus=false;
 	    		cancel(true);
 	    		client.getConnectionManager().shutdown(); 
+	    		AlertDialog.Builder builder=new AlertDialog.Builder(context);
+	    		builder.setMessage("IOException, "+e.toString());
+	    		builder.setCancelable(false);
+	    		builder.setPositiveButton("OK",new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.cancel();
+					}
+				});
+	    		builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.cancel();
+					}
+				});
+	    		AlertDialog alert=builder.create();
+	    		alert.show();
 	    		Log.e("IOException", e.toString());
 	    	} 
 	    
@@ -539,8 +606,8 @@ public class ClientWebService  extends AsyncTask<String,Integer,String> {
 	    	}
 	    }
 	    
-	    public String[] arrayOfString(String jsonResults,String jsonArray,String itemName){
-	    	String[] resultList = null;
+	    public Vector<String> arrayOfString(String jsonResults,String jsonArray,String itemName){
+	    	Vector<String> resultList =new Vector<String>();
 			  try {
 				// Create a JSON object hierarchy from the results
 				JSONObject jsonObj = new JSONObject(jsonResults.toString()); 
@@ -548,7 +615,7 @@ public class ClientWebService  extends AsyncTask<String,Integer,String> {
 				        // Extract the Place descriptions from the results
 				
 				for (int i = 0; i < predsJsonArray.length(); i++) {
-					resultList[i]=predsJsonArray.getJSONObject(i).getString(itemName);
+					resultList.add(predsJsonArray.getJSONObject(i).getString(itemName));
 				           
 				            Log.e("ArrayList",""+predsJsonArray.getJSONObject(i).getString(itemName));
 				        }
@@ -586,7 +653,9 @@ public class ClientWebService  extends AsyncTask<String,Integer,String> {
 		protected void onProgressUpdate(Integer...progress){
 	
 			if(progress[0]!=100){
-				//this.progressBar.setVisibility(View.VISIBLE);
+				if(this.progressBar!=null){
+				this.progressBar.setVisibility(View.VISIBLE);
+				}
 				
 			}else{
 				this.loadingCompleted=true;

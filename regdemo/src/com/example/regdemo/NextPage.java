@@ -167,59 +167,52 @@ public class NextPage extends Activity {
      }
 	 private void dataToSend(){
 		String watoto=idadiWatoto.getText().toString();
-		String myChild="";
-		String familia="{\"userfamily\":[";
-		String kuoa="";
+		//String myChild="";
+		//String familia="{\"userfamily\":[";
+		//String kuoa="";
+		int childs=0;
+		int childc=0;
 		Boolean umeoaz=umeoa.isChecked();
-		if(umeoaz){
-			int childc= UmeoaEnterText.getChildCount();
-			if(childc>0){
-				
-		 //EditText myText=(EditText)UmeoaEnterText.getChildAt(0);
-		 for (EditText myText : editListUmeoa) {
-		kuoa="{\"mwanajina\":\""+myText.getText().toString()+"\",\"aina\":\"mke\",\"id\":\""+frompageone[0]+"\",\"mratibu\":\"2\"}";
-		 }
-		 }
-			
-			if(Integer.parseInt(watoto)>=1){
-				int childs=LLEnterText.getChildCount();
-				if(childs>0){
-					int i=1;
-					
-					 for (EditText editText : editListWatoto) {
-						 if(i>=childs){
-                         myChild+="{\"mwanajina\":\""+editText.getText().toString()+"\",\"aina\":\"mtoto\",\"id\":\""+frompageone[0]+"\",\"mratibu\":\"2\"}";
-						 }else{
-					 myChild+="{\"mwanajina\":\""+editText.getText().toString()+"\",\"aina\":\"mtoto\",\"id\":\""+frompageone[0]+"\",\"mratibu\":\"2\"},";	 
-						 }
-                         i++;
-                     }
-				}
-			}
-			if(myChild.equals("") && kuoa.equals("")){
-				//all are empty
-			}else if(myChild.equals("") && (!kuoa.equals(""))){
-				//myChild is empty
-			  familia+=kuoa+"]}";	
-			}else if(kuoa.equals("") && (!myChild.equals(""))){
-				//kuoa is empty
-				familia+=myChild+"]}";
-			}else{
-			//all have something.
-			familia+=kuoa+","+myChild+"]}";	
-			}
-			Log.e("Famili",familia);
-			if(!familia.equals("")){
+	
+			 if(umeoaz){
+			childc= UmeoaEnterText.getChildCount();
+			 }
 				ClientWebService register=new ClientWebService(urls,NextPage.this,inflater,"data",false);
-				  register.AddParam("data", familia);
+				  register.AddParam("data", "");
 			       register.AddParam("action", "register2");
-			       
+			       if(Integer.parseInt(watoto)>=1){
+			    	   childs=LLEnterText.getChildCount();
+						if(childs>0){
+			                 for (EditText editText : editListWatoto) {
+								 
+							   register.AddParam("mwanajina[]", editText.getText().toString());
+							   register.AddParam("aina[]", "mtoto");
+							   register.AddParam("id[]", frompageone[0]);
+							   register.AddParam("mratibu[]", "2");
+		               
+		                     }
+						}
+						
+						if(childc>0){
+							
+							 //EditText myText=(EditText)UmeoaEnterText.getChildAt(0);
+							 for (EditText myText : editListUmeoa) {
+							   register.AddParam("mwanajina[]", myText.getText().toString());
+							   register.AddParam("aina[]", "mke");
+							   register.AddParam("id[]", frompageone[0]);
+							   register.AddParam("mratibu[]", "2");
+							 }
+							 }
+					}
+			         register.isMultForm(true);
 					 String[] mapkey={"refId"};
 				     register.setMapKey(mapkey);
 					 register.execute("post");
 					 try {
 						 resetView();
+						 if(register.getResponseCode()!=503 && register.getResponseCode()!=404 && register.getResponseCode()!=408 ){
 						 results=register.get();
+						 }
 						 String value=String.valueOf(results);
 						 if(!value.trim().equals("false")){
 							
@@ -238,9 +231,7 @@ public class NextPage extends Activity {
 							}
 						 }
 					 }catch (InterruptedException e) {} catch (ExecutionException e) {}
-			}
-				
-		}
+					 
 	 }
 
 	    @Override

@@ -22,19 +22,21 @@ public final class R {
     }
     public static final class drawable {
         public static final int ic_launcher=0x7f020000;
+        public static final int icon=0x7f020001;
     }
     public static final class id {
-        public static final int action_settings=0x7f080026;
+        public static final int action_settings=0x7f08002a;
         public static final int ainakitambulisho=0x7f08000c;
         public static final int autokata=0x7f08000f;
         public static final int automkoa=0x7f080010;
         public static final int autowilaya=0x7f080011;
         public static final int banki=0x7f080015;
         public static final int biashara=0x7f080012;
-        public static final int chumbakuoa=0x7f080023;
-        public static final int chumbawatoto=0x7f080025;
+        public static final int chumbakuoa=0x7f080024;
+        public static final int chumbawatoto=0x7f080026;
         public static final int huduma=0x7f080014;
-        public static final int idadiwatoto=0x7f080024;
+        public static final int idadiwatoto=0x7f080025;
+        public static final int imageView1=0x7f080027;
         public static final int inaload=0x7f08000d;
         public static final int inayofuata=0x7f08000e;
         public static final int jina=0x7f080002;
@@ -44,24 +46,27 @@ public final class R {
         public static final int kikundi=0x7f080013;
         public static final int kuanziakiwango=0x7f080017;
         public static final int maliposiku=0x7f080018;
-        public static final int mdhaminiview=0x7f08001e;
+        public static final int mdhaminiview=0x7f08001d;
         public static final int mke=0x7f080004;
         public static final int mkoa=0x7f080007;
-        public static final int mtejaview=0x7f080020;
+        public static final int mtejaview=0x7f080021;
         public static final int mudamalipo=0x7f080019;
         public static final int mume=0x7f080005;
-        public static final int myspinners=0x7f080021;
+        public static final int myspinners=0x7f080022;
         public static final int nambakitambulisho=0x7f08000b;
         public static final int ombikiwango=0x7f080016;
         public static final int pichamdhamini=0x7f08001c;
-        public static final int pichamteja=0x7f08001f;
+        public static final int pichamteja=0x7f080020;
+        public static final int progress=0x7f08001f;
         public static final int scrollView1=0x7f080000;
         public static final int simu=0x7f08000a;
         public static final int simumdhamini=0x7f08001b;
+        public static final int splash_pro=0x7f080028;
+        public static final int splash_pro2=0x7f080029;
         public static final int tarehekuzaliwa=0x7f080006;
         public static final int textView1=0x7f080001;
-        public static final int tumadata=0x7f08001d;
-        public static final int umeoa=0x7f080022;
+        public static final int tumadata=0x7f08001e;
+        public static final int umeoa=0x7f080023;
         public static final int wilaya=0x7f080008;
     }
     public static final class layout {
@@ -74,6 +79,7 @@ public final class R {
         public static final int mtejapicha=0x7f030006;
         public static final int myview=0x7f030007;
         public static final int nextpage=0x7f030008;
+        public static final int splashscreen=0x7f030009;
     }
     public static final class menu {
         public static final int main=0x7f070000;
@@ -122,15 +128,6 @@ public final class R {
     }
     public static final class style {
         /** 
-        Base application theme, dependent on API level. This theme is replaced
-        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
-    
-
-            Theme customizations available in newer API levels can go in
-            res/values-vXX/styles.xml, while customizations related to
-            backward-compatibility can go here.
-        
-
         Base application theme for API 11+. This theme completely replaces
         AppBaseTheme from res/values/styles.xml on API 11+ devices.
     
@@ -142,10 +139,22 @@ public final class R {
     
  API 14 theme customizations can go here. 
          */
-        public static final int AppBaseTheme=0x7f060000;
-        /**  Application theme. 
- All customizations that are NOT specific to a particular API-level can go here. 
+        public static final int AppBaseTheme=0x7f060007;
+        public static final int AppTheme=0x7f060000;
+        /**  end normal button text 
+ Letter selector styles 
          */
-        public static final int AppTheme=0x7f060001;
+        public static final int Letter_selector=0x7f060006;
+        public static final int button_text_black=0x7f060002;
+        /**  normal button text 
+         */
+        public static final int button_text_black_normal=0x7f060004;
+        /**  Button styles 
+         */
+        public static final int button_text_white=0x7f060001;
+        public static final int button_text_white_normal=0x7f060005;
+        /**  end of Button Styless 
+         */
+        public static final int heading_text_black=0x7f060003;
     }
 }

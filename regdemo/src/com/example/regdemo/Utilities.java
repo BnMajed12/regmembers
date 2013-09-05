@@ -104,21 +104,29 @@ public class Utilities {
     }
     
     public ArrayList<String> getSpinnerData(String urls,String jsonArray,String input,String infos){
-    	String results="";
+    	String results=null;
     	ArrayList<String> resultList = null;
 		ClientWebService test=new ClientWebService(urls);
 		String data="{\""+jsonArray+"\":[{\"type\":\""+jsonArray+"\",\"search\":\""+input+"\",\"value\":\""+infos+"\"}]}";
 		test.AddParam("action","autocomp");
 		test.AddParam("type",jsonArray);
+		test.AddParam("search", input);
+		test.AddParam("value", infos);
 		 test.AddParam("data", data);
+		 test.isMultForm(true);
 		 test.execute("get");
 		 try {
+			if(test.getResponseCode()!=503 && test.getResponseCode()!=404 && test.getResponseCode()!=408 ){
   			 results=test.get();
+			}else{
+				//display some error.
+				 results="{\""+jsonArray+"\":[{\""+jsonArray+"\":\"none\"}]}";
+			}
   			 String value=String.valueOf(results);
   			 if(!value.trim().equals("false")){
   				Log.e("Filter",infos);
   				Log.e("Fromautocomplete","myresult: "+results);
-  				if(results!=null){
+  				if(results!=null ){
   					
   					resultList=test.arrayListData(results,jsonArray,jsonArray);
   				}

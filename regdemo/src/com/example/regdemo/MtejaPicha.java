@@ -20,12 +20,12 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 public class MtejaPicha extends Activity{
-	private static final int MDHA_CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
 	private static final int MTE_CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 200;
-	private Uri fileUriMteja,fileUriMdhamini;
+	private Uri fileUriMteja;
 	private LayoutInflater inflater;
 	private String urls;
 	private String results="";
@@ -36,6 +36,7 @@ public class MtejaPicha extends Activity{
 	private String[] frompageone;
 	private Bitmap bitmap;
 	private  Button sendData;
+	private ProgressBar progress;
 	private ImageView mtejaView;
 	String url="";
 	private static final int CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE = 200;
@@ -46,19 +47,10 @@ public class MtejaPicha extends Activity{
 	        inflater=(LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			 urls=this.getResources().getString(R.string.apiURL);
 	        Intent pageone=getIntent();
+	        progress=(ProgressBar)findViewById(R.id.progress);
+	       
 	        mtejaView=(ImageView)findViewById(R.id.mtejaview);
 	    frompageone= pageone.getStringArrayExtra("pageone");
-	    sendData=(Button)findViewById(R.id.tumadata);
-	    //tunatuma data hapa
-	    sendData.setOnClickListener(new OnClickListener(){
-
-			@Override
-			public void onClick(View v) {
-				dataToSend();
-			}
-	    	
-	    });
-	    
 	
 	   
 	    }
@@ -72,33 +64,43 @@ public class MtejaPicha extends Activity{
 		    // start the image capture Intent
 		    startActivityForResult(intent, MTE_CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);  
 	 }
+	 
+	 public void sendPicha(View v){
+		 dataToSend();	 
+	 }
      private void resetView(){
 
      }
 	 private void dataToSend(){
 
-			String familia="";
-
-			Log.e("Famili",familia);
-			if(!familia.equals("")){
 				ClientWebService register=new ClientWebService(urls,MtejaPicha.this,inflater,"data",false);
-				  register.AddParam("data", familia);
+				register.setProgressBar(progress);
+				  register.AddParam("data", "");
 			       register.AddParam("action", "register5");
 			       register.AddParam("mratibu", "2");
 			       register.AddParam("id",frompageone[0]);
 			       register.addImages(fileUriMteja.getEncodedPath());
+			       register.isMultForm(true);
 					 String[] mapkey={"refId"};
 				     register.setMapKey(mapkey);
+				     
 					 register.execute("post");
 					 try {
 						 resetView();
+						 if(register.getResponseCode()!=503 && register.getResponseCode()!=404 && register.getResponseCode()!=408 ){
+								
 						 results=register.get();
+						  
+						 }else{
+							 Log.e("not arrowed","errors");
+						 }
 						 String value=String.valueOf(results);
 						 if(!value.trim().equals("false")){
 							
 							
 							if(results!=null){
 								logData=register.getData();
+								
 					           if(logData!=null && logData.size()>0){
 			              	  
 			    					myData=logData.get(0);
@@ -111,7 +113,7 @@ public class MtejaPicha extends Activity{
 							}
 						 }
 					 }catch (InterruptedException e) {} catch (ExecutionException e) {}
-			}
+			
 				
 		
 	 }

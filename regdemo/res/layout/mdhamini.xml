@@ -3,7 +3,12 @@
 android:layout_width="fill_parent" android:layout_height="fill_parent"
 xmlns:android="http://schemas.android.com/apk/res/android">
 <RelativeLayout android:layout_width="match_parent"
-    android:layout_height="wrap_content" >
+    android:layout_height="wrap_content" 
+     android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        >
 
     <TextView
         android:id="@+id/textView1"
@@ -55,24 +60,32 @@ xmlns:android="http://schemas.android.com/apk/res/android">
        android:text="@string/picha" />
 
 
-  
-   <Button
-        android:id="@+id/tumadata"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/pichamdhamini"
-        android:layout_marginTop="24dp"
-        android:text="@string/tumataarifa" />
-
-
    <ImageView
        android:id="@+id/mdhaminiview"
+       android:layout_width="180dp"
+       android:layout_height="180dp"
+       android:layout_below="@+id/pichamdhamini"
+        />
+
+   <Button
+       android:id="@+id/tumadata"
+       style="?android:attr/buttonStyleSmall"
        android:layout_width="wrap_content"
        android:layout_height="wrap_content"
-       android:layout_above="@+id/tumadata"
+       android:layout_below="@+id/mdhaminiview"
+       android:layout_alignParentBottom="true"
+       android:layout_centerHorizontal="true"
+       android:layout_marginBottom="15dp"
+       android:onClick="sendMdhaminiData"
+       android:text="@string/tumataarifa" />
+
+   <ProgressBar
+       android:id="@+id/progress"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_alignBottom="@+id/tumadata"
        android:layout_toRightOf="@+id/tumadata"
-       android:src="@drawable/ic_launcher" />
+       android:visibility="invisible"  />
 
 </RelativeLayout>
 </ScrollView>

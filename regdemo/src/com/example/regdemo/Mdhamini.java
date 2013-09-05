@@ -2,7 +2,6 @@ package com.example.regdemo;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import android.app.Activity;
@@ -13,25 +12,16 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Toast;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 
 public class Mdhamini extends Activity{
 	private static final int MDHA_CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
-	private static final int MTE_CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 200;
 	private Uri fileUriMdhamini;
 	private LayoutInflater inflater;
 	private String urls;
@@ -42,8 +32,8 @@ public class Mdhamini extends Activity{
 	public static final int MEDIA_TYPE_VIDEO = 2;
 	private String[] frompageone;
 	private Bitmap bitmap;
-	private  Button sendData;
 	private ImageView mdhaminiView;
+	private ProgressBar progress;
 	private EditText mdhamini,simumdhamini;
 	String url="";
 	private static final int CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE = 200;
@@ -54,24 +44,19 @@ public class Mdhamini extends Activity{
 	        inflater=(LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			 urls=this.getResources().getString(R.string.apiURL);
 	        Intent pageone=getIntent();
+	        progress=(ProgressBar)findViewById(R.id.progress);
+	        
 	        mdhamini=(EditText)findViewById(R.id.jinamdhamini);
 	        simumdhamini=(EditText)findViewById(R.id.simumdhamini);
 	        mdhaminiView=(ImageView)findViewById(R.id.mdhaminiview);
 	    frompageone= pageone.getStringArrayExtra("pageone");
-	    sendData=(Button)findViewById(R.id.tumadata);
-	    //tunatuma data hapa
-	    sendData.setOnClickListener(new OnClickListener(){
-
-			@Override
-			public void onClick(View v) {
-				dataToSend();
-			}
-	    	
-	    });
 	    
 	
 	   
 	    }
+	 public void sendMdhaminiData(View v){
+		 dataToSend(); 
+	 }
 	 public void pichaMdhamini(View v){
 			// create Intent to take a picture and return control to the calling application
 		    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -92,22 +77,27 @@ public class Mdhamini extends Activity{
 			String familia="";
 	String jina=mdhamini.getText().toString();
 	String simu=simumdhamini.getText().toString();
-			Log.e("Famili",familia);
-			if(!familia.equals("")){
+
 				ClientWebService register=new ClientWebService(urls,Mdhamini.this,inflater,"data",false);
 				  register.AddParam("data", familia);
+				  register.setProgressBar(progress);
 			       register.AddParam("action", "register4");
 			       register.AddParam("mdhamini", jina);
 			       register.AddParam("mdhaminisimu", simu);
 			       register.AddParam("mratibu", "2");
 			       register.AddParam("id",frompageone[0]);
 			       register.addImages(fileUriMdhamini.getEncodedPath());
+			       register.isMultForm(true);
 					 String[] mapkey={"refId"};
 				     register.setMapKey(mapkey);
+				   
 					 register.execute("post");
 					 try {
 						 resetView();
-						 results=register.get();
+						 if(register.getResponseCode()!=500 && register.getResponseCode()!=503 && register.getResponseCode()!=404 && register.getResponseCode()!=408 ){
+							 
+							 results=register.get();
+						 }
 						 String value=String.valueOf(results);
 						 if(!value.trim().equals("false")){
 							
@@ -126,7 +116,7 @@ public class Mdhamini extends Activity{
 							}
 						 }
 					 }catch (InterruptedException e) {} catch (ExecutionException e) {}
-			}
+			
 				
 		
 	 }
