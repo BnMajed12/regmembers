@@ -48,6 +48,7 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class ClientWebService  extends AsyncTask<String,Integer,String> {
 	    private ArrayList <NameValuePair> params;
@@ -298,7 +299,7 @@ public Boolean hasConnection(){
 		     mybobs.add(bab);
 		}
 		private   List<ByteArrayBody> getImage(){
-		return mybobs;
+		return this.mybobs;
 		}
 	    /**
 	     * this method is used to execute the given request using post or get method as specified
@@ -835,7 +836,12 @@ public Boolean hasConnection(){
 		return textviews;
 	}
 
-	
+	public void setToastSMS(String sms){
+		if(this.context!=null){
+		Toast.makeText(this.context,sms, Toast.LENGTH_LONG).show();
+		}
+        
+	}
 }
 
 

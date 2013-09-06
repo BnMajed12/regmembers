@@ -90,7 +90,9 @@ public class Mdhamini extends Activity{
 			       register.isMultForm(true);
 					 String[] mapkey={"refId"};
 				     register.setMapKey(mapkey);
-				   
+				   if(jina.equals("") || simu.equals("")){
+					   register.setToastSMS("Tafadhari jaza form yote");
+				   }else{
 					 register.execute("post");
 					 try {
 						 resetView();
@@ -116,7 +118,7 @@ public class Mdhamini extends Activity{
 							}
 						 }
 					 }catch (InterruptedException e) {} catch (ExecutionException e) {}
-			
+				   }
 				
 		
 	 }

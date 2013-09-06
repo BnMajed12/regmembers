@@ -166,12 +166,14 @@ public class NextPage extends Activity {
     	 }
      }
 	 private void dataToSend(){
-		String watoto=idadiWatoto.getText().toString();
+		String watoto=idadiWatoto.getText().toString().trim();
 		//String myChild="";
 		//String familia="{\"userfamily\":[";
 		//String kuoa="";
 		int childs=0;
 		int childc=0;
+		;
+		
 		Boolean umeoaz=umeoa.isChecked();
 	
 			 if(umeoaz){
@@ -180,7 +182,7 @@ public class NextPage extends Activity {
 				ClientWebService register=new ClientWebService(urls,NextPage.this,inflater,"data",false);
 				  register.AddParam("data", "");
 			       register.AddParam("action", "register2");
-			       if(Integer.parseInt(watoto)>=1){
+			       if(watoto.matches("\\d") && Integer.parseInt(watoto)>=1){
 			    	   childs=LLEnterText.getChildCount();
 						if(childs>0){
 			                 for (EditText editText : editListWatoto) {
@@ -192,6 +194,7 @@ public class NextPage extends Activity {
 		               
 		                     }
 						}
+			       }
 						
 						if(childc>0){
 							
@@ -203,11 +206,13 @@ public class NextPage extends Activity {
 							   register.AddParam("mratibu[]", "2");
 							 }
 							 }
-					}
+					
 			         register.isMultForm(true);
 					 String[] mapkey={"refId"};
 				     register.setMapKey(mapkey);
+				     if(childc>0 || childs>0){
 					 register.execute("post");
+				     
 					 try {
 						 resetView();
 						 if(register.getResponseCode()!=503 && register.getResponseCode()!=404 && register.getResponseCode()!=408 ){
@@ -231,6 +236,14 @@ public class NextPage extends Activity {
 							}
 						 }
 					 }catch (InterruptedException e) {} catch (ExecutionException e) {}
+					 
+				     }else{
+				    	 //the no data to send.
+				    	 Intent intent=new Intent(NextPage.this,Biashara.class);
+	    			        intent.putExtra("pageone", frompageone);
+	    			    	   startActivity(intent);
+				    	 
+				     }
 					 
 	 }
 

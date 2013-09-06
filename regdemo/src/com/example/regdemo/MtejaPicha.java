@@ -87,7 +87,7 @@ public class MtejaPicha extends Activity{
 					 register.execute("post");
 					 try {
 						 resetView();
-						 if(register.getResponseCode()!=503 && register.getResponseCode()!=404 && register.getResponseCode()!=408 ){
+						 if( register.getResponseCode()!=500 && register.getResponseCode()!=503 && register.getResponseCode()!=404 && register.getResponseCode()!=408 ){
 								
 						 results=register.get();
 						  

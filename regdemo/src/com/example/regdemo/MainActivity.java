@@ -36,7 +36,6 @@ public class MainActivity extends Activity implements OnItemClickListener, OnIte
 	private LayoutInflater inflater;
 	private String urls;
 	private String results=null;
-	private DatabaseOperation ops=null;
 	private ArrayList<HashMap<String,String>>  logData=new ArrayList<HashMap<String,String>>();
 	private HashMap<String,String> myData;
 	private EditText jina,tareheKuzaliwa,simu,nambaKitambulisho,ainaKitambulisho;
@@ -45,7 +44,7 @@ public class MainActivity extends Activity implements OnItemClickListener, OnIte
 	private RadioButton mke,mme;
 	private Button  sendButton;
 	private String huumkoa,hiiwilaya;
-	private DatabaseOperation forSpin=null;
+	private DatabaseOperation forSpin=null,ops=null;
 	private Spinner spinMkoa,spinWilaya,spinKata;
 	private ArrayAdapter<String> mkoaAdapt,wilayaAdapt,kataAdapt;
 	private ArrayList<String> mkoaList,kataList,wilayaList;
@@ -145,13 +144,19 @@ public class MainActivity extends Activity implements OnItemClickListener, OnIte
        //register.isMultForm(true);
 	   String[] mapkey={"refId"};
 	   register.setMapKey(mapkey);
-	   register.execute("post");
+	   if(jinaz.equals("") || simuz.equals("") || ainaKita.equals("") || nambaKita.equals("")){
+	//error
+		   register.setToastSMS("Tafadhari Jaza Fomu Yote");
+	   }else{
+		   register.execute("post");   
+	   
 		 try {
 			 resetFields();
 			 if(register.getResponseCode()!=503 && register.getResponseCode()!=404 && register.getResponseCode()!=408 ){
 			results=register.get();
 			 }else{
-            //display some errors	 
+            //display some errors	
+          register.setToastSMS("Mtandao Unasumbua Funga Ujaribu Baadae");
 			 }
 			 String value=String.valueOf(results);
 			 if(!value.trim().equals("false")){
@@ -170,10 +175,13 @@ public class MainActivity extends Activity implements OnItemClickListener, OnIte
     			    	   startActivity(intent);
     					Log.e("Hash","online :"+userid);
     				}
+				}else{
+					register.setToastSMS("Mtandao Unasumbua Funga Ujaribu Baadae");	
 				}
 			 }
 		 }catch (InterruptedException e) {} catch (ExecutionException e) {}
-    	//Log.e("Nyumbani","Hellow people");
+	   }
+	   
     	}
     }
     
@@ -285,10 +293,10 @@ public class MainActivity extends Activity implements OnItemClickListener, OnIte
 			 addSpinnerData(spinWilaya,wilayaAdapt);	
 		}else if(id==wilayaId){
 			forSpin=new DatabaseOperation(MainActivity.this);
-	   		 ArrayList<String> wilayaSpin=forSpin.getKata(str);
+	   		 ArrayList<String> kataSpin=forSpin.getKata(str);
 	   		forSpin.close();
-	   		 if(wilayaSpin!=null && wilayaSpin.size()>0){
-	   			wilayaList=wilayaSpin;
+	   		 if(kataSpin!=null && kataSpin.size()>0){
+	   			kataList=kataSpin;
 	   		 }else{
 	   			 kataList=getSpinnerData("kata","",str);
 	   			for(String mydata: kataList){

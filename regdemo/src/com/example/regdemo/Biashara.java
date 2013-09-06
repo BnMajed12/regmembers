@@ -38,11 +38,12 @@ public class Biashara extends Activity implements OnItemSelectedListener {
 	private ArrayList<HashMap<String,String>>  logData=new ArrayList<HashMap<String,String>>();
 	public static final int MEDIA_TYPE_IMAGE = 1;
 	public static final int MEDIA_TYPE_VIDEO = 2;
+	private DatabaseOperation forSpin=null,ops=null;
 	private String[] frompageone;
 	private Bitmap bitmap;
 	private  Button sendData;
 	private ImageView image;
-	
+	private ArrayList<String> hudumaList,mudaList;
    
 	String url="";
 	private static final int CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE = 200;
@@ -61,10 +62,40 @@ public class Biashara extends Activity implements OnItemSelectedListener {
 	    spinMuda=(Spinner)findViewById(R.id.mudamalipo);
 		 spinHuduma.setOnItemSelectedListener(this);
 		 spinHuduma.setOnItemSelectedListener(this);
+		 //setting data to huduma spin
+		 forSpin=new DatabaseOperation(Biashara.this);
+		 ArrayList<String> hudumaSpin=forSpin.getHuduma();
+		 forSpin.close();
+		 if(hudumaSpin!=null && hudumaSpin.size()>0){
+		    hudumaList=hudumaSpin;
+		 }else{
+			 hudumaList=hudumu.getSpinnerData(urls,"huduma","","");
+			 for(String mydata: hudumaList){
+    			 ops=new DatabaseOperation(Biashara.this);
+    			ops.insertHuduma(mydata);
+    			ops.close();
+    		}
+		 }
+		 
+		 //setting data to muda spin
+		 forSpin=new DatabaseOperation(Biashara.this);
+		 ArrayList<String> mudaSpin=forSpin.getMuda();
+		 forSpin.close();
+		 if(mudaSpin!=null && mudaSpin.size()>0){
+		    mudaList=mudaSpin;
+		 }else{
+			 mudaList=hudumu.getSpinnerData(urls,"mudamalipo","","");
+			 for(String mydata: mudaList){
+    			 ops=new DatabaseOperation(Biashara.this);
+    			ops.insertMuda(mydata);
+    			ops.close();
+    		}
+		 }
+		 //end getting spinn data
 		 hudumu.addSpinnerData(spinHuduma, new ArrayAdapter<String>(Biashara.this,
-	    			android.R.layout.simple_spinner_item, hudumu.getSpinnerData(urls,"huduma","","")));
+	    			android.R.layout.simple_spinner_item, hudumaList));
 		 lipamuda.addSpinnerData(spinMuda, new ArrayAdapter<String>(Biashara.this,
-	    			android.R.layout.simple_spinner_item, hudumu.getSpinnerData(urls,"mudamalipo","","")));
+	    			android.R.layout.simple_spinner_item, mudaList));
 	    sendData=(Button)findViewById(R.id.inayofuata);
 	    //tunatuma data hapa
 	    sendData.setOnClickListener(new OnClickListener(){
@@ -106,16 +137,17 @@ public class Biashara extends Activity implements OnItemSelectedListener {
 		String huduma=spinHuduma.getSelectedItem().toString();
 		String mudaz=spinMuda.getSelectedItem().toString();
 		
-		
-		if(biasharaz.equals("") && kiwangoz.equals("") && kianzioz.equals("") && malipo.equals("")){
-		//some fields are empty.	
+		ClientWebService register=new ClientWebService(urls,Biashara.this,inflater,"data",false);
+		if(biasharaz.equals("") || kiwangoz.equals("") || kianzioz.equals("") || malipo.equals("")){
+		//some fields are empty.
+			register.setToastSMS("Tafadhari Jaza Fomu Yote.");
 		}else{
 			/*String familia="{\"userbusiness\":[{\"biashara\":\""+biasharaz+"\",\"kikundi\":\""+kikundiz+"\",\"banki\":\""+bankiz+"\",";
 			       familia+="\"kiwango\":\""+kiwangoz+"\",\"kianzio\":\""+kianzioz+"\",\"maliposiku\":\""+malipo+"\",";
 			       familia+="\"huduma\":\""+huduma+"\",\"mudamalipo\":\""+mudaz+"\",\"id\":\""+frompageone[0]+"\",\"mratibu\":\"2\"}]}";
 	           //  Log.e("famili",familia);*/
 			  
-					ClientWebService register=new ClientWebService(urls,Biashara.this,inflater,"data",false);
+					
 					  register.AddParam("data", "");
 				       register.AddParam("action", "register3");
 				       register.AddParam("biashara", biasharaz);
