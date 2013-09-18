@@ -63,6 +63,10 @@ private ArrayList<TextView> textviews;
 		
 	}
 	
+	public TextView getItemPlayBtn(){
+		return this.itemPlayBtn;
+	}
+	
 	/**
 	 * This method is used to set image icon to display on left side of list item song
 	 * @param imageIconId

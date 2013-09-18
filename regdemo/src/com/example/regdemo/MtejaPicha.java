@@ -1,11 +1,8 @@
 package com.example.regdemo;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.concurrent.ExecutionException;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -13,31 +10,26 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 public class MtejaPicha extends Activity{
 	private static final int MTE_CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 200;
 	private Uri fileUriMteja;
-	private LayoutInflater inflater;
-	private String urls;
-	private String results="";
-	private HashMap<String,String> myData;
-	private ArrayList<HashMap<String,String>>  logData=new ArrayList<HashMap<String,String>>();
+	//private LayoutInflater inflater;
+	//private String urls;
+	//private String results="";
+	//private HashMap<String,String> myData;
+	//private ArrayList<HashMap<String,String>>  logData=new ArrayList<HashMap<String,String>>();
 	public static final int MEDIA_TYPE_IMAGE = 1;
 	public static final int MEDIA_TYPE_VIDEO = 2;
 	private DatabaseOperation db=null;
 	private String[] frompageone;
 	private Bitmap bitmap;
-	private  Button sendData;
-	private ProgressBar progress;
+	//private  Button sendData;
+	//private ProgressBar progress;
 	private ImageView mtejaView;
 	String url="";
 	private static final int CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE = 200;
@@ -45,10 +37,10 @@ public class MtejaPicha extends Activity{
 	    protected void onCreate(Bundle savedInstanceState) {
 	        super.onCreate(savedInstanceState);
 	        setContentView(R.layout.mtejapicha);
-	        inflater=(LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			 urls=this.getResources().getString(R.string.apiURL);
+	       // inflater=(LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			// urls=this.getResources().getString(R.string.apiURL);
 	        Intent pageone=getIntent();
-	        progress=(ProgressBar)findViewById(R.id.progress);
+	      //  progress=(ProgressBar)findViewById(R.id.progress);
 	       
 	        mtejaView=(ImageView)findViewById(R.id.mtejaview);
 	    frompageone= pageone.getStringArrayExtra("pageone");

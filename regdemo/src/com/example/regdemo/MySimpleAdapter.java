@@ -2,11 +2,8 @@ package com.example.regdemo;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +27,7 @@ public class MySimpleAdapter extends SimpleAdapter {
 	 private int[] dataTextView=null;
 	private ArrayList<TextView> textviews,addplaylist,addcart;
 	private ArrayList<ProgressBar> loadingIcon;
-	 private  TextView itemPlayBtn;
+ private  TextView itemPlayBtn;
 	public MySimpleAdapter(Context context,
 			ArrayList< HashMap<String, String>> data, int resource, String[] from,
 			int[] to,LayoutInflater inflates,int viewlayoutid,int textViewResourceId,String[] mapKey) {
@@ -47,6 +44,9 @@ public class MySimpleAdapter extends SimpleAdapter {
           this.dataTextView=to;
 	}
 	
+	public int getTextViewResourceId(){
+		return this.textviewid;
+	}
 	@Override
 	public View getView(int position,View convertView,ViewGroup parent){
 		
@@ -86,7 +86,8 @@ public class MySimpleAdapter extends SimpleAdapter {
     	 textviews.add((TextView)row.findViewById(getItemImage()));
     	this.itemPlayBtn=itemIcon;
      }
-
+      
+   
      //getAddPlaylistTextView()
      if(getAddPlaylistTextView()!=0){
     	// TextView itemaddplaylist=(TextView)row.findViewById(getAddPlaylistTextView());
@@ -105,6 +106,9 @@ public class MySimpleAdapter extends SimpleAdapter {
 		
 	}
 	
+	  public TextView getItemPlayBtn(){
+	    	 return this.itemPlayBtn;
+	     }
 	/**
 	 * This method is used to set image icon to display on left side of list item song
 	 * @param imageIconId

@@ -7,15 +7,12 @@ package com.example.regdemo;
 
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -23,43 +20,40 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends Activity implements OnItemClickListener, OnItemSelectedListener, OnClickListener {
-	private LayoutInflater inflater;
+	//private LayoutInflater inflater;
 	private String urls;
 	private String results=null;
-	private ArrayList<HashMap<String,String>>  logData=new ArrayList<HashMap<String,String>>();
-	private HashMap<String,String> myData;
+	//private ArrayList<HashMap<String,String>>  logData=new ArrayList<HashMap<String,String>>();
+	//private HashMap<String,String> myData;
 	private EditText jina,tareheKuzaliwa,simu,nambaKitambulisho,ainaKitambulisho;
-	private RadioGroup jinsia;
+	//private RadioGroup jinsia;
 	private RadioButton mke,mme;
 	private DatabaseOperation db;
 	private Button  sendButton;
-	private String huumkoa,hiiwilaya;
+	//private String huumkoa,hiiwilaya;
 	private DatabaseOperation forSpin=null,ops=null;
 	private Spinner spinMkoa,spinWilaya,spinKata;
-	private ArrayAdapter<String> mkoaAdapt,wilayaAdapt,kataAdapt;
-	private ArrayList<String> mkoaList,kataList,wilayaList;
-	private String ids;
+	private ArrayAdapter<String> mkoaAdapt; //wilayaAdapt,kataAdapt;
+private ArrayList<String> mkoaList; //kataList,wilayaList
+//	private String ids;
 	//private ProgressBar barprogress=null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
        // Button inayofuata=(Button)findViewById(R.id.inayofuata);
-        inflater=(LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+       // inflater=(LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		 urls=this.getResources().getString(R.string.apiURL);
 		 mkoaList=new ArrayList<String>();
-		 wilayaList=new ArrayList<String>();
-		 kataList=new ArrayList<String>();
+		// wilayaList=new ArrayList<String>();
+		// kataList=new ArrayList<String>();
 		 //barprogress=(ProgressBar)findViewById(R.id.inaload);
 		 //MyAdapter(this,int spinner, int textViewResourceId,String[] objects,LayoutInflater inflates,int viewlayoutid)
 		 spinMkoa=(Spinner)findViewById(R.id.mkoa);
@@ -98,7 +92,7 @@ public class MainActivity extends Activity implements OnItemClickListener, OnIte
 	}
 		
 	}
-    private void resetFields(){
+    public void resetFields(){
     	jina.setText("");
     	simu.setText("");
     	nambaKitambulisho.setText("");
@@ -145,7 +139,7 @@ public class MainActivity extends Activity implements OnItemClickListener, OnIte
     }
     
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) { 
-    	String str = (String) adapterView.getItemAtPosition(position);
+    	 adapterView.getItemAtPosition(position);
   
     	
    // Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
@@ -154,7 +148,7 @@ public class MainActivity extends Activity implements OnItemClickListener, OnIte
     private void createItems(){
     	jina=(EditText)findViewById(R.id.jina);
     	tareheKuzaliwa=(EditText)findViewById(R.id.tarehekuzaliwa);
-    	jinsia=(RadioGroup)findViewById(R.id.jinsia);
+    	//jinsia=(RadioGroup)findViewById(R.id.jinsia);
     	simu=(EditText)findViewById(R.id.simu);
     	nambaKitambulisho=(EditText)findViewById(R.id.nambakitambulisho);
     	ainaKitambulisho=(EditText)findViewById(R.id.ainakitambulisho);

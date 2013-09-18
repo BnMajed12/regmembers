@@ -7,7 +7,6 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.v4.widget.SimpleCursorAdapter;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +19,7 @@ public class CustomCursorAdapter extends SimpleCursorAdapter {
      private Context context;
      private int cellLayout;
      private int[] textViewId;
+	@SuppressWarnings("deprecation")
 	public CustomCursorAdapter(Context context, int layout, Cursor c,
 			String[] from, int[] to) {
 		super(context, layout, c, from, to);
@@ -31,7 +31,13 @@ public class CustomCursorAdapter extends SimpleCursorAdapter {
 	}
 	
 	
-
+     public int getLayout(){
+    	 return this.layout;
+     }
+     
+     public Context getContext(){
+    	 return this.context;
+     }
 	  @Override
       public View newView(Context context, Cursor cursor, ViewGroup parent) {
         //  Log.i("NewView", newViewCount.toString());

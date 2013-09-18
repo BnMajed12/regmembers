@@ -3,9 +3,12 @@ package com.example.regdemo;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -19,8 +22,9 @@ import android.support.v4.view.ViewPager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -29,6 +33,7 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -42,6 +47,7 @@ public class RegisterPageHolder extends FragmentActivity implements OnItemClickL
 	private static final int MTE_CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 200;
 	public static final int MEDIA_TYPE_IMAGE = 1;
 	public static final int MEDIA_TYPE_VIDEO = 2;
+	private static final int DATE_DIALOG_ID = 3;
 	private  ArrayList<Object> setValues;
 	 public static final String PREFS_NAME = "MyRegFile";
 	 private  ViewPager pager;
@@ -72,6 +78,45 @@ public class RegisterPageHolder extends FragmentActivity implements OnItemClickL
     private List<EditText> editListUmeoa = new ArrayList<EditText>();
     private List<EditText> editListWatoto = new ArrayList<EditText>();
     private List<RelativeLayout> linearlayoutList=new ArrayList<RelativeLayout>();
+    private int pYear=2011;
+    private int pMonth=3;
+    private int pDay=5;
+    
+    /** Callback received when the user "picks" a date in the dialog */
+    private DatePickerDialog.OnDateSetListener pDateSetListener =
+            new DatePickerDialog.OnDateSetListener() {
+ 
+                public void onDateSet(DatePicker view, int year,
+                                      int monthOfYear, int dayOfMonth) {
+                    pYear = year;
+                    pMonth = monthOfYear;
+                    pDay = dayOfMonth;
+                    updateDisplay();
+                    //displayToast();
+                }
+            };
+            
+            /** Updates the date in the TextView */
+            private void updateDisplay() {
+            	String months="",days="";
+            	if((pMonth+1)<10){
+            		months="0"+(pMonth+1);
+            	}else{
+            	    months=""+(pMonth+1);
+            	}
+            	if((pDay)<10){
+            		days="0"+(pDay);
+            	}else{
+            	    days=""+(pDay);
+            	}
+            	tareheKuzaliwa.setText(
+                    new StringBuilder()
+                            // Month is 0 based so add 1
+                            .append(pYear).append("-")
+                            .append(months).append("-")
+                            .append(days).append(" "));
+            }
+            
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -154,10 +199,24 @@ public class RegisterPageHolder extends FragmentActivity implements OnItemClickL
         
     }
 
+  
+    
+    /** Create a new dialog for date picker */
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
+    protected Dialog onCreateDialog(int id) {
+        switch (id) {
+        case DATE_DIALOG_ID:
+        	Calendar cal = Calendar.getInstance();
+              int iDay = cal.get(Calendar.DAY_OF_MONTH);
+        	  int iMonth = cal.get(Calendar.MONTH);
+        	  int iYear = cal.get(Calendar.YEAR);
+        	DatePickerDialog mydial=new DatePickerDialog(this,
+                    pDateSetListener,
+                    iYear, iMonth, iDay);
+        	mydial.setMessage("Tarehe Ya Kuzaliwa Mteja");
+            return mydial;
+        }
+        return null;
     }
     
     
@@ -545,6 +604,28 @@ public void initSpinners(){
 	ainaKitambulisho=(EditText)findViewById(R.id.ainakitambulisho);
 	mke=(RadioButton)findViewById(R.id.mke);
 	mme=(RadioButton)findViewById(R.id.mume);
+	tareheKuzaliwa.setKeyListener(null);
+	tareheKuzaliwa.setOnFocusChangeListener(new OnFocusChangeListener(){
+
+		@SuppressWarnings("deprecation")
+		@Override
+		public void onFocusChange(View v, boolean hasFocus) {
+		if(hasFocus){
+			showDialog(DATE_DIALOG_ID);	
+		}
+			
+		}
+		
+	});
+	tareheKuzaliwa.setOnClickListener(new OnClickListener(){
+
+		@SuppressWarnings("deprecation")
+		@Override
+		public void onClick(View v) {
+			showDialog(DATE_DIALOG_ID);	
+		}
+		
+	});
 
 	
 	spinMkoa=(Spinner)findViewById(R.id.mkoa);
@@ -575,6 +656,7 @@ public void initSpinners(){
    			android.R.layout.simple_spinner_item,mkoaList );
 	 addSpinnerData(spinMkoa,mkoaAdapt);
 	 }
+	 
 }
 
     public ArrayList<String> getSpinnerData(String jsonArray,String input,String infos){

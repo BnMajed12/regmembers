@@ -26,6 +26,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignTop="@+id/onajina"
+        android:contentDescription="@string/picha"
         android:padding="6dp"
         android:src="@drawable/icon" />
 

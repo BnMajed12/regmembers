@@ -64,7 +64,7 @@
        android:layout_width="100dp"
        android:layout_height="100dp"
        android:layout_below="@+id/pichamdhamini"
-        />
+       android:contentDescription="@string/picha" />
 
    <Button
        android:id="@+id/tumadata"

@@ -40,7 +40,8 @@
        android:id="@+id/mtejaview"
        android:layout_width="100dp"
        android:layout_height="100dp"
-       android:layout_below="@+id/pichamteja" />
+       android:layout_below="@+id/pichamteja"
+       android:contentDescription="@string/picha" />
 
    <Button
        android:id="@+id/tumadata"

@@ -10,7 +10,6 @@ import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -20,7 +19,6 @@ import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
@@ -31,7 +29,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.content.Entity;
 import android.util.Log;
 
 public class ConsumeWebService {
@@ -56,7 +53,7 @@ public String callWebService(String url,String action,ArrayList<NameValuePair> d
 		httppost.setEntity(new UrlEncodedFormEntity(data,HTTP.UTF_8));
 		
 		//response handler
-		ResponseHandler<String> rh=new ResponseHandler<String>(){
+		new ResponseHandler<String>(){
 			//invoked when client receives response
 			@Override
 			public String handleResponse(HttpResponse response) throws ClientProtocolException, IOException {
@@ -76,11 +73,12 @@ public String callWebService(String url,String action,ArrayList<NameValuePair> d
 
 			
 			   };
+			   
 			   httpResponse=httpClient.execute(httppost); 
-			   String message;
-			   int responseCode;
-	            responseCode = httpResponse.getStatusLine().getStatusCode();
-	            message = httpResponse.getStatusLine().getReasonPhrase();
+			 //  String message;
+			  // int responseCode;
+	           httpResponse.getStatusLine().getStatusCode();
+	            httpResponse.getStatusLine().getReasonPhrase();
 	            HttpEntity entit = httpResponse.getEntity();
 	            if (entit!= null) {
 

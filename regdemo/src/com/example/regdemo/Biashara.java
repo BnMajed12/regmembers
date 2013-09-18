@@ -2,7 +2,6 @@ package com.example.regdemo;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.concurrent.ExecutionException;
 
 import android.app.Activity;
 import android.content.Context;
@@ -11,7 +10,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -30,12 +28,12 @@ public class Biashara extends Activity implements OnItemSelectedListener {
 	private Uri fileUri;
 	private LayoutInflater inflater;
 	private String urls;
-	private String results="";
+	//private String results="";
 	private EditText biashara,kikundi,banki,kiwango,kianzio,maliposiku;
 	private Spinner spinHuduma,spinMuda;
 	 Utilities hudumu,lipamuda;
-	private HashMap<String,String> myData;
-	private ArrayList<HashMap<String,String>>  logData=new ArrayList<HashMap<String,String>>();
+	//private HashMap<String,String> myData;
+	//private ArrayList<HashMap<String,String>>  logData=new ArrayList<HashMap<String,String>>();
 	public static final int MEDIA_TYPE_IMAGE = 1;
 	public static final int MEDIA_TYPE_VIDEO = 2;
 	private DatabaseOperation forSpin=null,ops=null,db=null;
@@ -118,7 +116,7 @@ public class Biashara extends Activity implements OnItemSelectedListener {
 	    	maliposiku=(EditText)findViewById(R.id.maliposiku);
 	    }
 	 
-     private void resetView(){
+     public void resetView(){
       biashara.setText("");
       kikundi.setText("");
       kiwango.setText("");
@@ -132,10 +130,10 @@ public class Biashara extends Activity implements OnItemSelectedListener {
 		 String kikundiz=kikundi.getText().toString();
 		 String kiwangoz=kiwango.getText().toString();
 		 String kianzioz=kianzio.getText().toString();
-		 String bankiz=banki.getText().toString();
+		// String bankiz=banki.getText().toString();
 		 String malipo=maliposiku.getText().toString();
 		String huduma=spinHuduma.getSelectedItem().toString();
-		String mudaz=spinMuda.getSelectedItem().toString();
+		//String mudaz=spinMuda.getSelectedItem().toString();
 		
 		ClientWebService register=new ClientWebService(urls,Biashara.this,inflater,"data",false);
 		if(biasharaz.equals("") || kiwangoz.equals("") || kianzioz.equals("") || malipo.equals("")){

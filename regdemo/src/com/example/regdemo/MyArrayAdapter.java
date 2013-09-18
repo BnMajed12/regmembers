@@ -50,7 +50,9 @@ public class MyArrayAdapter extends ArrayAdapter<String> implements Filterable{
 	                }
 	            }
 
+				
 				public boolean onLoadClass(Class clazz) {
+					
 					return false;
 				}};
 	        return filter;

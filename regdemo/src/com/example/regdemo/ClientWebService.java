@@ -255,6 +255,10 @@ public class ClientWebService  extends AsyncTask<String,Integer,String> {
 
 	 }
 	 
+	 public int getTextViewResourceId(){
+		 return this.textViewResourceId;
+	 }
+	 
 	 /**
 	  * This method is used to enable or disable database deletion
 	  * @param hastoDeleteDbData
@@ -265,6 +269,10 @@ public class ClientWebService  extends AsyncTask<String,Integer,String> {
 	 
 	 public void setAdpaterCursor(Cursor c){
 	this.adapterCursor=c;	 
+	 }
+	 
+	 public Cursor getAdpaterCursor(){
+		 return this.adapterCursor;
 	 }
 	 /**
 	  * This is used to get information of database
@@ -417,7 +425,7 @@ public class ClientWebService  extends AsyncTask<String,Integer,String> {
 	  * This is used to return list of created image ready for upload
 	  * @return list of images
 	  */
-	 private   List<ByteArrayBody> getImage(){
+	 public  List<ByteArrayBody> getImage(){
 		 return this.mybobs;
 	 }
 	 

@@ -3,10 +3,6 @@ package com.example.regdemo;
 
 
 
-import java.util.ArrayList;
-
-import com.example.regdemo.R;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -19,13 +15,13 @@ import android.widget.ProgressBar;
 public class SplashScreen extends Activity {
 	private Thread splashScreen;
 	protected int _splashTime=10000;
-	private String results="";
+	//private String results="";
 	private String urls="";
 	private LayoutInflater inflater;
 	private ProgressBar barprogress;
 	private boolean splashFinished=false,islogedin=false;
 	private ClientWebService clients=null;
-	private  DatabaseOperation  ops=null;
+	//private  DatabaseOperation  ops=null;
 	public final static String USER_ID="com.vikoba.vikoba.USERID";
 	
 	@Override

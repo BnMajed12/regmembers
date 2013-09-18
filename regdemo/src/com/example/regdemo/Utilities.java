@@ -20,7 +20,6 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 public class Utilities {
 	 private List<LinearLayout> linearlayoutList=new ArrayList<LinearLayout>();
@@ -215,6 +214,7 @@ public class Utilities {
 		    try {
 		   	 SharedPreferences settings = context.getSharedPreferences(storeName, 0);
 			    String mdhaUriz = settings.getString(key, null);
+				@SuppressWarnings("unchecked")
 				ArrayList<Object> list=(ArrayList<Object>)ObjectSerializer.deserialize(mdhaUriz);
 				return list;
 			} catch (IOException e) {

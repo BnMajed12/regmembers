@@ -100,7 +100,7 @@ public class DatabaseOperation extends SQLiteOpenHelper{
 	public void updateData(HashMap<String,Object> fieldPlusData,String tablename,String conditionField,String conditionValue){
 		Set<String> fields=fieldPlusData.keySet();
      //   int size=fields.size()/2;
-        Iterator iterate=fields.iterator();
+        Iterator<String> iterate=fields.iterator();
         String query="update  "+tablename+"  set ";
        Object value="";
         while(iterate.hasNext()){

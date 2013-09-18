@@ -1,9 +1,5 @@
 package com.example.regdemo;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.concurrent.ExecutionException;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -18,7 +14,6 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 public class Mdhamini extends Activity{
@@ -26,16 +21,16 @@ public class Mdhamini extends Activity{
 	private Uri fileUriMdhamini;
 	private LayoutInflater inflater;
 	private String urls;
-	private String results="";
-	private HashMap<String,String> myData;
-	private ArrayList<HashMap<String,String>>  logData=new ArrayList<HashMap<String,String>>();
+	//private String results="";
+	//private HashMap<String,String> myData;
+	//private ArrayList<HashMap<String,String>>  logData=new ArrayList<HashMap<String,String>>();
 	public static final int MEDIA_TYPE_IMAGE = 1;
 	public static final int MEDIA_TYPE_VIDEO = 2;
 	private String[] frompageone;
 	private DatabaseOperation db=null;
 	private Bitmap bitmap;
 	private ImageView mdhaminiView;
-	private ProgressBar progress;
+	//private ProgressBar progress;
 	private EditText mdhamini,simumdhamini;
 	String url="";
 	private static final int CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE = 200;
@@ -46,7 +41,7 @@ public class Mdhamini extends Activity{
 	        inflater=(LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			 urls=this.getResources().getString(R.string.apiURL);
 	        Intent pageone=getIntent();
-	        progress=(ProgressBar)findViewById(R.id.progress);
+	      //  progress=(ProgressBar)findViewById(R.id.progress);
 	        
 	        mdhamini=(EditText)findViewById(R.id.jinamdhamini);
 	        simumdhamini=(EditText)findViewById(R.id.simumdhamini);

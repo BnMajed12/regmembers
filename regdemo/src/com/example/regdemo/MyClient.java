@@ -37,6 +37,9 @@ public MyClient(String url,String imageUrl){
 	this.imageUrl=imageUrl;
 }
 
+public String getImageUrl(){
+return this.imageUrl;	
+}
 public void addImages(String imageUrl){
 	bitmap=BitmapFactory.decodeFile(imageUrl);
 	 ByteArrayOutputStream bos = new ByteArrayOutputStream();

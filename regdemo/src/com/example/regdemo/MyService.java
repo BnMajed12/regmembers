@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import android.annotation.SuppressLint;
 import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Intent;
@@ -20,11 +21,12 @@ import android.os.Message;
 import android.os.StatFs;
 import android.util.Log;
 
+@SuppressLint("HandlerLeak")
 public class MyService extends Service {
 	private static final String TAG = "com.example.ServiceExample";
 	 SharedPreferences preferences;
 
-	    private static final String DOCUMENT_VIEW_STATE_PREFERENCES = "DjvuDocumentViewState";
+	   // private static final String DOCUMENT_VIEW_STATE_PREFERENCES = "DjvuDocumentViewState";
 
 	      private Looper mServiceLooper;
 	      private ServiceHandler mServiceHandler;
@@ -58,6 +60,10 @@ public class MyService extends Service {
          mServiceHandler = new ServiceHandler(mServiceLooper);
 	}
 
+	
+	public NotificationManager getNotifyManager(){
+		return this.mNM;
+	}
 @Override
 public int onStartCommand(Intent intent, int flags, int startId) {
 
@@ -104,7 +110,7 @@ public int onStartCommand(Intent intent, int flags, int startId) {
 
     void showNotification(String message,String title) {
     // In this sample, we'll use the same text for the ticker and the expanded notification
-    CharSequence text = message;
+   // CharSequence text = message;
 
     // Set the icon, scrolling text and timestamp
    /*Notification notification = new Notification(R.drawable.icon, "vvs",
@@ -171,8 +177,10 @@ try {
     }else{
         Log.d("FILE-DELETE","NO");
     }
-    File from =new File(root.getAbsolutePath() + "/" + fileName);
-    File to = new File(root.getAbsolutePath() + "/" + "some.pdf");
+  //  File from =
+    new File(root.getAbsolutePath() + "/" + fileName);
+    //File to = 
+    new File(root.getAbsolutePath() + "/" + "some.pdf");
 
 
     } catch (Exception e) {

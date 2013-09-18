@@ -2,14 +2,13 @@ package com.example.regdemo;
 
 import android.annotation.SuppressLint;
 import android.app.ListActivity;
-import android.app.LoaderManager.LoaderCallbacks;
-import android.support.v4.content.CursorLoader;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.ContactsContract;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;

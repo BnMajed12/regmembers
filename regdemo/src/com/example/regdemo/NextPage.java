@@ -1,12 +1,9 @@
 package com.example.regdemo;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -15,7 +12,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -33,14 +29,14 @@ import android.widget.Toast;
 public class NextPage extends Activity {
 	private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
 	private Uri fileUri;
-	private LayoutInflater inflater;
-	private String urls;
-	private String results="";
-	private HashMap<String,String> myData;
-	private ArrayList<HashMap<String,String>>  logData=new ArrayList<HashMap<String,String>>();
+	//private LayoutInflater inflater;
+	//private String urls;
+	//private String results="";
+	//private HashMap<String,String> myData;
+	//private ArrayList<HashMap<String,String>>  logData=new ArrayList<HashMap<String,String>>();
 	public static final int MEDIA_TYPE_IMAGE = 1;
 	public static final int MEDIA_TYPE_VIDEO = 2;
-	private String[] frompageone,watoto;
+	private String[] frompageone; //watoto;
 	private Bitmap bitmap;
 	private  Button sendData;
 	private ImageView image;
@@ -59,8 +55,8 @@ public class NextPage extends Activity {
 	    protected void onCreate(Bundle savedInstanceState) {
 	        super.onCreate(savedInstanceState);
 	        setContentView(R.layout.nextpage);
-	        inflater=(LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			 urls=this.getResources().getString(R.string.apiURL);
+	       // inflater=(LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			 //urls=this.getResources().getString(R.string.apiURL);
 	        Intent pageone=getIntent();
 	    frompageone= pageone.getStringArrayExtra("pageone");
 	    LLEnterText=(LinearLayout) findViewById(R.id.chumbawatoto);
@@ -150,7 +146,7 @@ public class NextPage extends Activity {
 	       });
 	   
 	    }
-     private void resetView(){
+     public void resetView(){
     	 idadiWatoto.setText("");
     	 umeoa.setChecked(false);
     	 int childc= UmeoaEnterText.getChildCount();

@@ -91,7 +91,7 @@ public class FomuToSend extends ListActivity {
          int checkedItemsCount = checkedItems.size();
          register=new ClientWebService(urls,FomuToSend.this,inflater,"data",false);
 		 register.progresDialogMessage("Subiri Natuma",pd);
-	      register.setToastSuccessSMS("Fomu "+checkedItemsCount+" Zimefanikiwa Kutumwa");
+	      register.setToastSuccessSMS("Umefanikiwa Kutuma Fomu "+checkedItemsCount+"");
 	      register.setToastFailSMS("Nimeshindwa Kutuma Fomu,Lekebisha Mtandao Ujaribu Tena.");
          register.isMultForm(true);
 		 register.hasDataToDelete(true);
