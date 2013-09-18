@@ -33,6 +33,7 @@ public class MtejaPicha extends Activity{
 	private ArrayList<HashMap<String,String>>  logData=new ArrayList<HashMap<String,String>>();
 	public static final int MEDIA_TYPE_IMAGE = 1;
 	public static final int MEDIA_TYPE_VIDEO = 2;
+	private DatabaseOperation db=null;
 	private String[] frompageone;
 	private Bitmap bitmap;
 	private  Button sendData;
@@ -59,6 +60,7 @@ public class MtejaPicha extends Activity{
 		// create Intent to take a picture and return control to the calling application
 		    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 		    fileUriMteja = CameraProcess.getOutputMediaFileUri(MEDIA_TYPE_IMAGE);
+		    Log.e("imageurl",fileUriMteja.toString());
 		    intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUriMteja); // set the image file name
 
 		    // start the image capture Intent
@@ -68,54 +70,15 @@ public class MtejaPicha extends Activity{
 	 public void sendPicha(View v){
 		 dataToSend();	 
 	 }
-     private void resetView(){
 
-     }
 	 private void dataToSend(){
-
-				ClientWebService register=new ClientWebService(urls,MtejaPicha.this,inflater,"data",false);
-				register.setProgressBar(progress);
-				  register.AddParam("data", "");
-			       register.AddParam("action", "register5");
-			       register.AddParam("mratibu", "2");
-			       register.AddParam("id",frompageone[0]);
-			       register.addImages(fileUriMteja.getEncodedPath());
-			       register.isMultForm(true);
-					 String[] mapkey={"refId"};
-				     register.setMapKey(mapkey);
-				     
-					 register.execute("post");
-					 try {
-						 resetView();
-						 if( register.getResponseCode()!=500 && register.getResponseCode()!=503 && register.getResponseCode()!=404 && register.getResponseCode()!=408 ){
-								
-						 results=register.get();
-						  
-						 }else{
-							 Log.e("not arrowed","errors");
-						 }
-						 String value=String.valueOf(results);
-						 if(!value.trim().equals("false")){
-							
-							
-							if(results!=null){
-								logData=register.getData();
-								
-					           if(logData!=null && logData.size()>0){
-			              	  
-			    					myData=logData.get(0);
-			    					
-			    					Intent intent=new Intent(MtejaPicha.this,Mdhamini.class);
-			    			        intent.putExtra("pageone", frompageone);
-			    			    	   startActivity(intent);
-			    				
-			    				}
-							}
-						 }
-					 }catch (InterruptedException e) {} catch (ExecutionException e) {}
-			
-				
-		
+              HashMap<String,Object> data=new HashMap<String,Object>();
+              data.put("imageurl", fileUriMteja.getEncodedPath());
+              db=new DatabaseOperation(MtejaPicha.this);
+              db.updateData(data, "profile", "id", frompageone[0]);
+              Intent intent=new Intent(MtejaPicha.this,Mdhamini.class);
+		        intent.putExtra("pageone", frompageone);
+		    	   startActivity(intent);	
 	 }
 
 	    @Override
@@ -132,9 +95,18 @@ public class MtejaPicha extends Activity{
 	            if (resultCode == RESULT_OK) {
 	                // Image captured and saved to fileUri specified in the Intent
 	            //	 Toast.makeText(NextPage.this,"myfile"+fileUri, Toast.LENGTH_LONG).show();
-	            	 
-	            	 bitmap=BitmapFactory.decodeFile(fileUriMteja.getEncodedPath());
-	            	mtejaView.setImageBitmap(bitmap);
+	            	
+	            	 if(data!=null){
+	            	
+	            	 }else{
+	            		 if(this.fileUriMteja!=null){
+	            			 String files=this.fileUriMteja.getEncodedPath();
+	    	            	 bitmap=BitmapFactory.decodeFile(files);
+	    	            	mtejaView.setImageBitmap(bitmap); 
+	            		 }else{
+	            Toast.makeText(MtejaPicha.this,"Picha haija hifadhiwa Tafadhari Piga Nyingine", Toast.LENGTH_LONG).show();
+	            		 }  	 
+	            	 }
 	               // Toast.makeText(NextPage.this, "Image saved to:\n"+data.getData(), Toast.LENGTH_LONG).show();
 	            } else if (resultCode == RESULT_CANCELED) {
 	            Toast.makeText(MtejaPicha.this, "Camera Cancelled:", Toast.LENGTH_LONG).show();

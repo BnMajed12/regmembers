@@ -12,6 +12,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -31,6 +32,7 @@ public class Mdhamini extends Activity{
 	public static final int MEDIA_TYPE_IMAGE = 1;
 	public static final int MEDIA_TYPE_VIDEO = 2;
 	private String[] frompageone;
+	private DatabaseOperation db=null;
 	private Bitmap bitmap;
 	private ImageView mdhaminiView;
 	private ProgressBar progress;
@@ -61,6 +63,7 @@ public class Mdhamini extends Activity{
 			// create Intent to take a picture and return control to the calling application
 		    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 		    fileUriMdhamini = CameraProcess.getOutputMediaFileUri(MEDIA_TYPE_IMAGE);
+		    Log.e("imageurl",fileUriMdhamini.toString());
 		    intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUriMdhamini); // set the image file name
 
 		    // start the image capture Intent
@@ -73,51 +76,22 @@ public class Mdhamini extends Activity{
     	 simumdhamini.setText("");
      }
 	 private void dataToSend(){
-
-			String familia="";
 	String jina=mdhamini.getText().toString();
 	String simu=simumdhamini.getText().toString();
 
 				ClientWebService register=new ClientWebService(urls,Mdhamini.this,inflater,"data",false);
-				  register.AddParam("data", familia);
-				  register.setProgressBar(progress);
-			       register.AddParam("action", "register4");
-			       register.AddParam("mdhamini", jina);
-			       register.AddParam("mdhaminisimu", simu);
-			       register.AddParam("mratibu", "2");
-			       register.AddParam("id",frompageone[0]);
-			       register.addImages(fileUriMdhamini.getEncodedPath());
-			       register.isMultForm(true);
-					 String[] mapkey={"refId"};
-				     register.setMapKey(mapkey);
 				   if(jina.equals("") || simu.equals("")){
 					   register.setToastSMS("Tafadhari jaza form yote");
 				   }else{
-					 register.execute("post");
-					 try {
-						 resetView();
-						 if(register.getResponseCode()!=500 && register.getResponseCode()!=503 && register.getResponseCode()!=404 && register.getResponseCode()!=408 ){
-							 
-							 results=register.get();
-						 }
-						 String value=String.valueOf(results);
-						 if(!value.trim().equals("false")){
-							
-							
-							if(results!=null){
-								logData=register.getData();
-					           if(logData!=null && logData.size()>0){
-			              	  
-			    					myData=logData.get(0);
-			    					
-			    					Intent intent=new Intent(Mdhamini.this,MainActivity.class);
-			    			        intent.putExtra("pageone", frompageone);
-			    			    	   startActivity(intent);
-			    				
-			    				}
-							}
-						 }
-					 }catch (InterruptedException e) {} catch (ExecutionException e) {}
+					   resetView();
+					 String[] data={frompageone[0],jina,simu,fileUriMdhamini.getEncodedPath()};
+					 db=new DatabaseOperation(Mdhamini.this);
+					 db.insertData(data, "mdhamini");
+					  db.close();
+					  Intent intent=new Intent(Mdhamini.this,HomePage.class);
+  			        intent.putExtra("pageone", frompageone);
+  			    	   startActivity(intent);
+					 
 				   }
 				
 		
@@ -137,10 +111,21 @@ public class Mdhamini extends Activity{
 	                // Image captured and saved to fileUri specified in the Intent
 	            //	 Toast.makeText(NextPage.this,"myfile"+fileUri, Toast.LENGTH_LONG).show();
 	            	 
-	            	 bitmap=BitmapFactory.decodeFile(fileUriMdhamini.getEncodedPath());
+	            	 if(data!=null){
+	            	 String files=fileUriMdhamini.getEncodedPath();
+	            	 bitmap=BitmapFactory.decodeFile(files);
 	            	mdhaminiView.setImageBitmap(bitmap);
-	               // Toast.makeText(NextPage.this, "Image saved to:\n"+data.getData(), Toast.LENGTH_LONG).show();
-	            } else if (resultCode == RESULT_CANCELED) {
+	            	 }else{
+	            		 if(this.fileUriMdhamini!=null){
+	            			 String files=this.fileUriMdhamini.getEncodedPath();
+	    	            	 bitmap=BitmapFactory.decodeFile(files);
+	    	            	mdhaminiView.setImageBitmap(bitmap); 
+	            		 }else{
+	            			 
+	              Toast.makeText(Mdhamini.this, "Picha haija hifadhiwa Tafadhari Piga Nyingine", Toast.LENGTH_LONG).show();
+	            		 }
+	            		 }
+	            	 } else if (resultCode == RESULT_CANCELED) {
 	            Toast.makeText(Mdhamini.this, "Camera Cancelled:", Toast.LENGTH_LONG).show();
 	                // User cancelled the image capture
 	            } else {

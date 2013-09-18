@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
+    android:layout_height="fill_parent"
+    android:background="@drawable/login_text_bg" >
 
     <ImageView
         android:id="@+id/imageView1"
@@ -30,5 +31,16 @@
         android:minHeight="2dip"
         android:minWidth="2dip"
         android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/textView1"
+        style="@style/text_black_normal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/splash_pro"
+        android:layout_centerHorizontal="true"
+        android:text="@string/splash"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="#FF000000" />
 
 </RelativeLayout>

@@ -1,17 +1,26 @@
 package com.example.regdemo;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.concurrent.ExecutionException;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 public class Utilities {
 	 private List<LinearLayout> linearlayoutList=new ArrayList<LinearLayout>();
@@ -135,13 +144,25 @@ public class Utilities {
 		return resultList;
     }
     
+    public void onlineToDbBackground(String urls,String jsonArray,String input,String infos,int code){
+		ClientWebService test=new ClientWebService(urls);
+		String data="{\""+jsonArray+"\":[{\"type\":\""+jsonArray+"\",\"search\":\""+input+"\",\"value\":\""+infos+"\"}]}";
+		test.AddParam("action","autocomp");
+		test.AddParam("type",jsonArray);
+		test.AddParam("search", input);
+		test.AddParam("value", infos);
+		 test.AddParam("data", data);
+		 test.isMultForm(true);
+		 test.setDBCode(code);
+		 test.execute("get");	
+    }
     
     public void addSpinnerData(Spinner spinner,ArrayAdapter<String> dataAdapter){
     		dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     		spinner.setAdapter(dataAdapter);
     }
     
-    private EditText editText(Context content,int _intID,String hitText,int width,List<EditText> editList) {
+   private EditText editText(Context content,int _intID,String hitText,int width,List<EditText> editList) {
         EditText editText = new EditText(content);
         editText.setId(_intID);
         editText.setHint(hitText);
@@ -150,7 +171,7 @@ public class Utilities {
         return editText;
     }
     
-    public LinearLayout linearlayout(LinearLayout layout,Context content,int _intID,String editTextHint,int width,List<EditText> editList)
+   public LinearLayout linearlayout(LinearLayout layout,Context content,int _intID,String editTextHint,int width,List<EditText> editList)
     {
         LinearLayout LLMain=new LinearLayout(content);
         LLMain.setId(_intID);
@@ -161,4 +182,110 @@ public class Utilities {
         return LLMain;
 
     }
+    
+   public static String getStoredString(Context context,String storeName,String key){
+   	 SharedPreferences settings = context.getSharedPreferences(storeName, 0);
+	    String mdhaUriz = settings.getString(key, null);
+	    return mdhaUriz;
+   }
+   
+   public  static void setStoreString(Context context,String storeName,String key, String value){
+   	 SharedPreferences settings = context.getSharedPreferences(storeName, 0);
+	      SharedPreferences.Editor editor = settings.edit();
+	      editor.putString(key,value);
+	      // Commit the edits!
+	      editor.commit();
+   }
+   
+   public static void setSerializableList(Context context,String storeName,String key,ArrayList<Object> value){
+	   try {
+			String obj=ObjectSerializer.serialize(value);
+			 SharedPreferences settings = context.getSharedPreferences(storeName, 0);
+		      SharedPreferences.Editor editor = settings.edit();
+		      editor.putString(key,obj);
+		      // Commit the edits!
+		      editor.commit();
+		} catch (IOException e) {
+	     Log.e("serialize error","Faield"+e);
+		}  
+   }
+   
+   public static ArrayList<Object> getSerializableList(Context context,String storeName,String key){
+	 
+		    try {
+		   	 SharedPreferences settings = context.getSharedPreferences(storeName, 0);
+			    String mdhaUriz = settings.getString(key, null);
+				ArrayList<Object> list=(ArrayList<Object>)ObjectSerializer.deserialize(mdhaUriz);
+				return list;
+			} catch (IOException e) {
+			
+			}
+		    return null;  
+   }
+   
+   public static void removeData(Context context, String storeName,String key){
+	   SharedPreferences settings = context.getSharedPreferences(storeName, 0);
+	   SharedPreferences.Editor editor = settings.edit();
+	   editor.remove(key);
+	   editor.commit();
+   }
+   
+   public static Set<String> getStoreSet(Context context,String storeName,String key){
+   	 SharedPreferences settings = context.getSharedPreferences(storeName, 0);
+		 Set<String> mdhaUriz=settings.getStringSet(key, null);
+		    return mdhaUriz;	
+   }
+   
+   public static void setStoreSet(Context context,String storeName,String key, Set<String> value){
+   	 SharedPreferences settings = context.getSharedPreferences(storeName, 0);
+	      SharedPreferences.Editor editor = settings.edit();
+	      editor.putStringSet(key,value);
+	      // Commit the edits!
+	      editor.commit();	
+   }
+    
+   
+   public static void removeRegisterData(Context context,String storename){
+	   Utilities.removeData(context,storename, "profile");
+    	Utilities.removeData(context,storename, "mtoto");
+    	Utilities.removeData(context,storename, "mke");
+    	Utilities.removeData(context,storename, "biashara");
+    	Utilities.removeData(context,storename, "mteja");
+    	Utilities.removeData(context,storename, "mdhamini");
+    	Utilities.removeData(context,storename, "jinamdhamini");
+   }
+   
+   
+   public static Bitmap decodeFile(File f,int IMAGE_MAX_SIZE){
+       Bitmap b = null;
+       try {
+           //Decode image size
+           BitmapFactory.Options o = new BitmapFactory.Options();
+           o.inJustDecodeBounds = true;
+
+           FileInputStream fis = new FileInputStream(f);
+           BitmapFactory.decodeStream(fis, null, o);
+           fis.close();
+
+           int scale = 1;
+           if (o.outHeight > IMAGE_MAX_SIZE || o.outWidth > IMAGE_MAX_SIZE) {
+               scale = (int)Math.pow(2, (int) Math.round(Math.log(IMAGE_MAX_SIZE / (double) Math.max(o.outHeight, o.outWidth)) / Math.log(0.5)));
+           }
+
+           //Decode with inSampleSize
+           BitmapFactory.Options o2 = new BitmapFactory.Options();
+           o2.inSampleSize = scale;
+           fis = new FileInputStream(f);
+           b = BitmapFactory.decodeStream(fis, null, o2);
+           fis.close();
+       } catch (IOException e) {
+       }
+       return b;
+   }
+    
+  public static String getEncodeStringUri(String uri){
+	  Uri my=Uri.parse(uri);
+		 String files= my.getEncodedPath();
+		 return files;
+  }
 }

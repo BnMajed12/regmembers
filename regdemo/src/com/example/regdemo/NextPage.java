@@ -19,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -26,6 +27,7 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 public class NextPage extends Activity {
@@ -38,18 +40,19 @@ public class NextPage extends Activity {
 	private ArrayList<HashMap<String,String>>  logData=new ArrayList<HashMap<String,String>>();
 	public static final int MEDIA_TYPE_IMAGE = 1;
 	public static final int MEDIA_TYPE_VIDEO = 2;
-	private String[] frompageone;
+	private String[] frompageone,watoto;
 	private Bitmap bitmap;
 	private  Button sendData;
 	private ImageView image;
 	private CheckBox umeoa;
+	private DatabaseOperation db=null;
 	private EditText idadiWatoto;
 	private int myWidth;
 	int _intMyLineCount;
 	LinearLayout LLEnterText,UmeoaEnterText;
     private List<EditText> editListUmeoa = new ArrayList<EditText>();
     private List<EditText> editListWatoto = new ArrayList<EditText>();
-    private List<LinearLayout> linearlayoutList=new ArrayList<LinearLayout>();
+    private List<RelativeLayout> linearlayoutList=new ArrayList<RelativeLayout>();
 	String url="";
 	private static final int CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE = 200;
 	 @Override
@@ -84,7 +87,7 @@ public class NextPage extends Activity {
 			Log.e("Umeoa checked","NImeoa");
 			if(kaoa){
 				String hint="Jina La Mume/Mke";
-				 UmeoaEnterText.addView(linearlayout(80,hint,myWidth,editListUmeoa));	
+				 UmeoaEnterText.addView(linearlayout(400,hint,myWidth,editListUmeoa));	
 			}else{
 				 UmeoaEnterText.removeViewAt(0);	
 			}
@@ -179,18 +182,14 @@ public class NextPage extends Activity {
 			 if(umeoaz){
 			childc= UmeoaEnterText.getChildCount();
 			 }
-				ClientWebService register=new ClientWebService(urls,NextPage.this,inflater,"data",false);
-				  register.AddParam("data", "");
-			       register.AddParam("action", "register2");
 			       if(watoto.matches("\\d") && Integer.parseInt(watoto)>=1){
 			    	   childs=LLEnterText.getChildCount();
 						if(childs>0){
 			                 for (EditText editText : editListWatoto) {
-								 
-							   register.AddParam("mwanajina[]", editText.getText().toString());
-							   register.AddParam("aina[]", "mtoto");
-							   register.AddParam("id[]", frompageone[0]);
-							   register.AddParam("mratibu[]", "2");
+						   String[] kids={frompageone[0],editText.getText().toString(),"mtoto"};
+						   db=new DatabaseOperation(NextPage.this);
+						   db.insertData(kids, "family");
+						   db.close();
 		               
 		                     }
 						}
@@ -200,50 +199,17 @@ public class NextPage extends Activity {
 							
 							 //EditText myText=(EditText)UmeoaEnterText.getChildAt(0);
 							 for (EditText myText : editListUmeoa) {
-							   register.AddParam("mwanajina[]", myText.getText().toString());
-							   register.AddParam("aina[]", "mke");
-							   register.AddParam("id[]", frompageone[0]);
-							   register.AddParam("mratibu[]", "2");
+								  String[] mke={frompageone[0],myText.getText().toString(),"mke"};
+								   db=new DatabaseOperation(NextPage.this);
+								   db.insertData(mke, "family");
+								   db.close();
 							 }
 							 }
-					
-			         register.isMultForm(true);
-					 String[] mapkey={"refId"};
-				     register.setMapKey(mapkey);
-				     if(childc>0 || childs>0){
-					 register.execute("post");
-				     
-					 try {
-						 resetView();
-						 if(register.getResponseCode()!=503 && register.getResponseCode()!=404 && register.getResponseCode()!=408 ){
-						 results=register.get();
-						 }
-						 String value=String.valueOf(results);
-						 if(!value.trim().equals("false")){
-							
-							
-							if(results!=null){
-								logData=register.getData();
-					           if(logData!=null && logData.size()>0){
-			              	  
-			    					myData=logData.get(0);
-			    					
-			    					Intent intent=new Intent(NextPage.this,Biashara.class);
-			    			        intent.putExtra("pageone", frompageone);
-			    			    	   startActivity(intent);
-			    				
-			    				}
-							}
-						 }
-					 }catch (InterruptedException e) {} catch (ExecutionException e) {}
-					 
-				     }else{
-				    	 //the no data to send.
-				    	 Intent intent=new Intent(NextPage.this,Biashara.class);
+						 Intent intent=new Intent(NextPage.this,Biashara.class);
 	    			        intent.putExtra("pageone", frompageone);
 	    			    	   startActivity(intent);
-				    	 
-				     }
+					
+			       
 					 
 	 }
 
@@ -289,18 +255,22 @@ public class NextPage extends Activity {
             EditText editText = new EditText(this);
             editText.setId(_intID);
             editText.setHint(hitText);
-            editText.setWidth(width);
+            editText.setMinWidth(LLEnterText.getWidth());
+            editText.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT));
             editList.add(editText);
+            
             return editText;
         }
 	    
-	    private LinearLayout linearlayout(int _intID,String editTextHint,int width,List<EditText> editList)
+	    private RelativeLayout linearlayout(int _intID,String editTextHint,int width,List<EditText> editList)
 	    {
-	        LinearLayout LLMain=new LinearLayout(this);
-	        LLMain.setId(_intID);
+	    	int layId=(_intID +5)* 3;
+	        RelativeLayout LLMain=new RelativeLayout(this);
+	        LLMain.setId(layId);
 	       // LLMain.addView(textView(_intID));
 	        LLMain.addView(editText(_intID,editTextHint,width,editList));
-	        LLMain.setOrientation(LinearLayout.HORIZONTAL);
+	       // LLMain.setOrientation(LinearLayout.HORIZONTAL);
+	        LLMain.refreshDrawableState();
 	        linearlayoutList.add(LLMain);
 	        return LLMain;
 

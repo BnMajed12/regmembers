@@ -38,7 +38,7 @@ public class Biashara extends Activity implements OnItemSelectedListener {
 	private ArrayList<HashMap<String,String>>  logData=new ArrayList<HashMap<String,String>>();
 	public static final int MEDIA_TYPE_IMAGE = 1;
 	public static final int MEDIA_TYPE_VIDEO = 2;
-	private DatabaseOperation forSpin=null,ops=null;
+	private DatabaseOperation forSpin=null,ops=null,db=null;
 	private String[] frompageone;
 	private Bitmap bitmap;
 	private  Button sendData;
@@ -142,52 +142,21 @@ public class Biashara extends Activity implements OnItemSelectedListener {
 		//some fields are empty.
 			register.setToastSMS("Tafadhari Jaza Fomu Yote.");
 		}else{
-			/*String familia="{\"userbusiness\":[{\"biashara\":\""+biasharaz+"\",\"kikundi\":\""+kikundiz+"\",\"banki\":\""+bankiz+"\",";
-			       familia+="\"kiwango\":\""+kiwangoz+"\",\"kianzio\":\""+kianzioz+"\",\"maliposiku\":\""+malipo+"\",";
-			       familia+="\"huduma\":\""+huduma+"\",\"mudamalipo\":\""+mudaz+"\",\"id\":\""+frompageone[0]+"\",\"mratibu\":\"2\"}]}";
-	           //  Log.e("famili",familia);*/
-			  
+		 HashMap<String,Object> data=new HashMap<String,Object>();
+			  data.put("huduma", huduma);
+			  data.put("kiwango_ombi", kiwangoz);
+			  data.put("kiwango_kuanzia",kianzioz);
+			  data.put("malipo_siku",malipo);
+			  data.put("biashara", biasharaz);
+			  data.put("kikundi", kikundiz);
+			  db=new DatabaseOperation(Biashara.this);
+			  db.updateData(data, "profile", "id", frompageone[0]);
+			  db.close();
+			  Intent intent=new Intent(Biashara.this,MtejaPicha.class);
+		        intent.putExtra("pageone", frompageone);
+		    	   startActivity(intent);
+		    	   
 					
-					  register.AddParam("data", "");
-				       register.AddParam("action", "register3");
-				       register.AddParam("biashara", biasharaz);
-				       register.AddParam("kikundi", kikundiz);
-				       register.AddParam("banki", bankiz);
-				       register.AddParam("kiwango", kiwangoz);
-				       register.AddParam("kianzio", kianzioz);
-				       register.AddParam("maliposiku", malipo);
-				       register.AddParam("huduma", huduma);
-				       register.AddParam("mudamalipo",mudaz);
-				       register.AddParam("id", frompageone[0]);
-				       register.isMultForm(true);
-				       register.AddParam("mratibu", "2");
-						 String[] mapkey={"refId"};
-					     register.setMapKey(mapkey);
-						 register.execute("post");
-						 try {
-							 resetView();
-							 if(register.getResponseCode()!=503 && register.getResponseCode()!=404 && register.getResponseCode()!=408 ){
-							 results=register.get();
-							 }
-							 String value=String.valueOf(results);
-							 if(!value.trim().equals("false")){
-								
-								
-								if(results!=null){
-									logData=register.getData();
-						           if(logData!=null && logData.size()>0){
-				              	  
-				    					myData=logData.get(0);
-				    					String userid=myData.get("refId");
-				    					Intent intent=new Intent(Biashara.this,MtejaPicha.class);
-				    			        intent.putExtra("pageone", frompageone);
-				    			    	   startActivity(intent);
-				    					Log.e("Hash","online :"+userid);
-				    				}
-								}
-							 }
-						 }catch (InterruptedException e) {} catch (ExecutionException e) {}
-				
 		}
 	
 		

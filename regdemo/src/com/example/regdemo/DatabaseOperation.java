@@ -1,10 +1,14 @@
 package com.example.regdemo;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Set;
 
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 
 public class DatabaseOperation extends SQLiteOpenHelper{
@@ -17,6 +21,9 @@ public class DatabaseOperation extends SQLiteOpenHelper{
 	private static final String MKOA_TABLE="mikoa";
 	private static final String WILAYA_TABLE="wilaya";
 	private static final String KATA_TABLE="kata";
+	private static final String PROFILE_TABLE="profile";
+	private static final String FAMILY_TABLE="family";
+	private static final String MDHAMINI_TABLE="mdhamini";
 	public DatabaseOperation(Context context){
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 	}
@@ -24,6 +31,17 @@ public class DatabaseOperation extends SQLiteOpenHelper{
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 	//creating database connections
+	String profile="CREATE TABLE "+PROFILE_TABLE+" (id integer primary key autoincrement, ";
+	       profile+=" jina VARCHAR,jinsia VARCHAR, kuzaliwa VARCHAR, mkoa VARCHAR,wilaya VARCHAR,kata VARCHAR,";
+	       profile+="simu VARCHAR,namba_kitambulisho VARCHAR, aina_kitambulisho VARCHAR,huduma VARCHAR,kiwango_ombi VARCHAR,";
+	       profile+="kiwango_kuanzia VARCHAR, malipo_siku VARCHAR,malipo_muda VARCHAR,biashara VARCHAR, kikundi VARCHAR,imageurl VARCHAR)";
+	       
+	String family="CREATE TABLE "+FAMILY_TABLE+" (id integer primary key autoincrement,owner integer, jina VARCHAR,aina_familia VARCHAR )";
+	String mdhamini="CREATE TABLE "+MDHAMINI_TABLE+"(id integer primary key autoincrement, owner integer,";
+	       mdhamini+="jina VARCHAR, simu VARCHAR, imageurl VARCHAR)";
+    db.execSQL(profile);
+    db.execSQL(family);
+    db.execSQL(mdhamini);
     db.execSQL("CREATE TABLE "+HUDUMA_TABLE+"(id integer primary key autoincrement, huduma VARCHAR,UNIQUE (huduma))");
 	db.execSQL("CREATE TABLE "+MUDA_TABLE+"(id integer primary key autoincrement, muda VARCHAR,UNIQUE (muda) )");
 	db.execSQL("CREATE TABLE "+MKOA_TABLE+"(id integer primary key autoincrement, mkoa VARCHAR,UNIQUE (mkoa))");
@@ -37,9 +55,73 @@ public class DatabaseOperation extends SQLiteOpenHelper{
 		
 	}
 	
+	
+	public int insertData(String[] data,String tablename){
+		int myid=getNewId(tablename);
+	String insert="INSERT INTO "+tablename+" VALUES('"+myid+"',";
+	for(int i=0; i<data.length; i++){
+    insert+="'"+data[i]+"'";
+    if(data.length!=(i+1)){
+    insert+=",";	
+    }
+	}
+	insert+=")";
+	dbs=getWritableDatabase();
+	dbs.execSQL(insert);
+	dbs.close();
+	return myid;
+	}
+	
+	/**
+	 * This is used to insert online result to some table for updates
+	 * @param data
+	 * @param tablename
+	 * @param fields
+	 * @param value
+	 */
+	public void insertFromOnline(String[] data, String tablename,String fields, String value){
+		Boolean exists=dataExist(tablename,fields,value);
+		if(!exists){
+			int myid=getNewId(tablename);
+			String insert="INSERT INTO "+tablename+" VALUES('"+myid+"',";
+			for(int i=0; i<data.length; i++){
+		    insert+="'"+data[i]+"'";
+		    if(data.length!=(i+1)){
+		    insert+=",";	
+		    }
+			}
+			insert+=")";
+			dbs=getWritableDatabase();
+			dbs.execSQL(insert);
+			dbs.close();	
+		}
+	}
+	
+	public void updateData(HashMap<String,Object> fieldPlusData,String tablename,String conditionField,String conditionValue){
+		Set<String> fields=fieldPlusData.keySet();
+     //   int size=fields.size()/2;
+        Iterator iterate=fields.iterator();
+        String query="update  "+tablename+"  set ";
+       Object value="";
+        while(iterate.hasNext()){
+             value=iterate.next();
+            if(iterate.hasNext()){
+             query+=""+value+"='"+fieldPlusData.get(value)+"', ";   
+           
+            }
+          
+        }
+        query+=""+value+"='"+fieldPlusData.get(value)+"'";
+        query+=" where "+conditionField+"='"+conditionValue+"'";
+        dbs=getWritableDatabase();
+        dbs.execSQL(query);
+        dbs.close();
+	}
+	
+	
 	public Boolean insertHuduma(String huduma){
 		Boolean exists=dataExist(HUDUMA_TABLE,"huduma",huduma);
-		if(exists){
+		if(!exists){
 			int myid=getNewId(HUDUMA_TABLE);
 		dbs=getWritableDatabase();
 		dbs.execSQL("INSERT INTO "+HUDUMA_TABLE+" VALUES('"+myid+"','"+huduma+"')");
@@ -227,12 +309,40 @@ public class DatabaseOperation extends SQLiteOpenHelper{
 	public int getNewId(String table){
 		readers=getReadableDatabase();
 		int exists=0;
-		c=readers.rawQuery("SELECT id FROM "+table, null);
+		c=readers.rawQuery("SELECT id FROM "+table+" order by id desc limit 1", null);
 		if(c.getCount()>0 && c.moveToFirst()){
-			exists=c.getCount();
+			exists=c.getInt(0);
 		}
 		c.close();
 		return exists+1;
 	}
 	
+	public Cursor getFomu(String table){
+		readers=getReadableDatabase();	
+		c=readers.rawQuery("SELECT id as _id,jina,imageurl FROM "+table, null);
+		if(c.moveToFirst()){
+			Log.e("cursor name",c.getString(c.getColumnIndex("jina")));
+		return c;
+		}
+		return null;
+	}
+	
+	public Cursor getFomuData(String idField,String id,String table){
+		readers=getReadableDatabase();
+		
+		String[] ids={id};
+		c=readers.rawQuery("SELECT * FROM "+table+ " WHERE "+idField+"=?", ids);
+		if(c.moveToFirst()){
+	     return c;
+		}
+		return null;
+	}
+	
+	public int deleteFomuData(String table,String idField,String id){
+		dbs=getWritableDatabase();
+		String[] ids={id};
+	int aff=dbs.delete(table, idField+"=?", ids);
+	
+	return aff;
+	}
 }

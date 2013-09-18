@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView android:id="@+id/scrollView1"
-android:layout_width="fill_parent" android:layout_height="fill_parent"
-xmlns:android="http://schemas.android.com/apk/res/android">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scrollView1"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/login_text_bg" >
 
 <RelativeLayout
     android:layout_width="match_parent"
@@ -11,27 +13,34 @@ xmlns:android="http://schemas.android.com/apk/res/android">
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin" >
 
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/title"
-        android:textSize="20sp" />
+   <TextView
+       android:id="@+id/textView1"
+       style="@style/text_black"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_alignParentTop="true"
+       android:layout_centerHorizontal="true"
+       android:layout_marginTop="15dp"
+       android:text="@string/taarifa_famili"
+       android:textAppearance="?android:attr/textAppearanceLarge"
+       android:visibility="gone" />
 
     <CheckBox
         android:id="@+id/umeoa"
+        style="@style/text_black_normal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/textView1"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="22dp"
         android:text="@string/kuolewa" />
        
     <LinearLayout
-         android:id="@+id/chumbakuoa"
+        android:id="@+id/chumbakuoa"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/umeoa"
         android:orientation="vertical" >
+
     </LinearLayout>
 
     <EditText
@@ -45,23 +54,24 @@ xmlns:android="http://schemas.android.com/apk/res/android">
         android:inputType="number" />
 
       <LinearLayout
-         android:id="@+id/chumbawatoto"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/idadiwatoto"
-        android:orientation="vertical" >
+          android:id="@+id/chumbawatoto"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_below="@+id/idadiwatoto"
+          android:orientation="vertical" >
+
     </LinearLayout>
 
     <Button
         android:id="@+id/inayofuata"
+        style="@style/button_text_black"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/chumbawatoto"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="22dp"
-        android:text="@string/inayofuata" />
-
-
+        android:text="@string/inayofuata"
+        android:visibility="gone" />
 
 </RelativeLayout>
 </ScrollView>
